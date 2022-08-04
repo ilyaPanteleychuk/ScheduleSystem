@@ -1,5 +1,6 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -11,11 +12,15 @@ public abstract class Lesson implements Entity{
     protected Audience audience;
     protected Group group;
     protected Teacher teacher;
-    protected Date date;
+    protected LocalDateTime date;
     protected int order;
     
-    protected Lesson(long id, UniversitySubject subject, Audience audience,
-                  Group group, Teacher teacher, Date date, int order) {
+    public Lesson() {
+    }
+    
+    public Lesson(long id, UniversitySubject subject,
+                  Audience audience, Group group, Teacher teacher,
+                  LocalDateTime date, int order) {
         this.id = id;
         this.subject = subject;
         this.audience = audience;
@@ -65,11 +70,11 @@ public abstract class Lesson implements Entity{
         this.teacher = teacher;
     }
     
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
     
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
     

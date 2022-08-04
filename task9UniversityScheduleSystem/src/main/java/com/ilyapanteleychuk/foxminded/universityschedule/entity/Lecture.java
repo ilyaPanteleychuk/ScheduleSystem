@@ -1,5 +1,6 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,13 +11,13 @@ public class Lecture extends Lesson implements Entity{
 
     private List<Group> groups;
     
-    public Lecture(long id, UniversitySubject subject, Audience audience,
-                   Group group, Teacher teacher, Date date, int order) {
+    public Lecture(long id, UniversitySubject subject, Audience audience, Group group,
+                   Teacher teacher, LocalDateTime date, int order) {
         super(id, subject, audience, group, teacher, date, order);
     }
     
     public Lecture(long id, UniversitySubject subject, Audience audience, Group group,
-                   Teacher teacher, Date date, int order, List<Group> groups) {
+                   Teacher teacher, LocalDateTime date, int order, List<Group> groups) {
         super(id, subject, audience, group, teacher, date, order);
         this.groups = groups;
     }

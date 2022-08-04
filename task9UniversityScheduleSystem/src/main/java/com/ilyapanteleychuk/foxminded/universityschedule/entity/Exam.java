@@ -1,39 +1,41 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
 
 public class Exam extends Lesson implements Entity{
     
-    private Date startTime;
-    private Date endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     
     public Exam(long id, UniversitySubject subject, Audience audience,
-                Group group, Teacher teacher, Date date, int order) {
+                Group group, Teacher teacher, LocalDateTime date, int order) {
         super(id, subject, audience, group, teacher, date, order);
     }
     
     public Exam(long id, UniversitySubject subject, Audience audience, Group group,
-                Teacher teacher, Date date, int order, Date startTime, Date endTime) {
+                Teacher teacher, LocalDateTime date, int order,
+                LocalDateTime startTime, LocalDateTime endTime) {
         super(id, subject, audience, group, teacher, date, order);
         this.startTime = startTime;
         this.endTime = endTime;
     }
     
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
     
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
     
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
     
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
     
