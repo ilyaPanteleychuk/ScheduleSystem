@@ -18,6 +18,15 @@ public class Audience implements Entity {
         this.audienceCapacity = audienceCapacity;
     }
     
+    public Audience(int audienceNumber) {
+        this.audienceNumber = audienceNumber;
+    }
+    
+    public Audience(int audienceNumber, int audienceCapacity) {
+        this.audienceNumber = audienceNumber;
+        this.audienceCapacity = audienceCapacity;
+    }
+    
     public long getId() {
         return id;
     }

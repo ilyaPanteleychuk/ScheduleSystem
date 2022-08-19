@@ -3,15 +3,19 @@ package com.ilyapanteleychuk.foxminded.universityschedule.entity;
 import java.util.Objects;
 
 
-public class UniversitySubject {
+public class Subject implements Entity {
     
     private long id;
     private String subjectTitle;
     
-    public UniversitySubject() {
+    public Subject() {
     }
     
-    public UniversitySubject(long id, String subjectTitle) {
+    public Subject(String subjectTitle) {
+        this.subjectTitle = subjectTitle;
+    }
+    
+    public Subject(long id, String subjectTitle) {
         this.id = id;
         this.subjectTitle = subjectTitle;
     }
@@ -44,7 +48,7 @@ public class UniversitySubject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UniversitySubject that = (UniversitySubject) o;
+        Subject that = (Subject) o;
         return id == that.id && Objects.equals(subjectTitle, that.subjectTitle);
     }
     

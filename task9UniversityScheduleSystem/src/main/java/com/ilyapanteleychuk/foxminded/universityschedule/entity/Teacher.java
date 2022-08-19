@@ -3,21 +3,24 @@ package com.ilyapanteleychuk.foxminded.universityschedule.entity;
 import java.util.Objects;
 
 
-public class Teacher {
+public class Teacher implements Entity{
 
     private long id;
     private String firstName;
     private String lastName;
-    private Schedule schedule;
     
     public Teacher() {
     }
     
-    public Teacher(long id, String firstName, String lastName, Schedule schedule) {
+    public Teacher(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    
+    public Teacher(long id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.schedule = schedule;
     }
     
     public long getId() {
@@ -44,21 +47,12 @@ public class Teacher {
         this.lastName = lastName;
     }
     
-    public Schedule getSchedule() {
-        return schedule;
-    }
-    
-    public void setSchedule(Schedule schedule) {
-        this.schedule = schedule;
-    }
-    
     @Override
     public String toString() {
         return "Teacher{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", schedule=" + schedule +
                 '}';
     }
     
@@ -68,12 +62,11 @@ public class Teacher {
         if (o == null || getClass() != o.getClass()) return false;
         Teacher teacher = (Teacher) o;
         return id == teacher.id && Objects.equals(firstName, teacher.firstName)
-                && Objects.equals(lastName, teacher.lastName)
-                && Objects.equals(schedule, teacher.schedule);
+                && Objects.equals(lastName, teacher.lastName);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, schedule);
+        return Objects.hash(id, firstName, lastName);
     }
 }

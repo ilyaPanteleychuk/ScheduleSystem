@@ -12,10 +12,13 @@ public class Group implements Entity{
     public Group() {
     }
     
-    public Group(long id, int groupNumber, Schedule schedule) {
+    public Group(int groupNumber) {
+        this.groupNumber = groupNumber;
+    }
+    
+    public Group(long id, int groupNumber) {
         this.id = id;
         this.groupNumber = groupNumber;
-        this.schedule = schedule;
     }
     
     public long getId() {
