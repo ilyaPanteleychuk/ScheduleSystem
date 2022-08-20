@@ -6,18 +6,18 @@ import java.util.Objects;
 public class Subject implements Entity {
     
     private long id;
-    private String subjectTitle;
+    private String title;
     
     public Subject() {
     }
     
-    public Subject(String subjectTitle) {
-        this.subjectTitle = subjectTitle;
+    public Subject(String title) {
+        this.title = title;
     }
     
-    public Subject(long id, String subjectTitle) {
+    public Subject(long id, String title) {
         this.id = id;
-        this.subjectTitle = subjectTitle;
+        this.title = title;
     }
     
     public long getId() {
@@ -28,19 +28,19 @@ public class Subject implements Entity {
         this.id = id;
     }
     
-    public String getSubjectTitle() {
-        return subjectTitle;
+    public String getTitle() {
+        return title;
     }
     
-    public void setSubjectTitle(String subjectTitle) {
-        this.subjectTitle = subjectTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
     
     @Override
     public String toString() {
-        return "UniversitySubject{" +
+        return "Subject{" +
                 "id=" + id +
-                ", subjectTitle='" + subjectTitle + '\'' +
+                ", title='" + title + '\'' +
                 '}';
     }
     
@@ -49,11 +49,11 @@ public class Subject implements Entity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Subject that = (Subject) o;
-        return id == that.id && Objects.equals(subjectTitle, that.subjectTitle);
+        return id == that.id && Objects.equals(title, that.title);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, subjectTitle);
+        return Objects.hash(id, title);
     }
 }

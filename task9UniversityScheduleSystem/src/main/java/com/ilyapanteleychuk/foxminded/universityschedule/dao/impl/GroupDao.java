@@ -3,9 +3,13 @@ package com.ilyapanteleychuk.foxminded.universityschedule.dao.impl;
 import com.ilyapanteleychuk.foxminded.universityschedule.dao.CommonDao;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Group;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -29,9 +33,17 @@ public class GroupDao implements CommonDao<Group> {
     @Override
     public void addAll(List<Group> groupList) {
         final String insertSql = "INSERT INTO university.groups VALUES(?)";
-        for(int i = 0; i <= groupList.size(); i++){
-            jdbcTemplate.update(insertSql, groupList.get(i).getGroupNumber());
-        }
+        jdbcTemplate.batchUpdate(insertSql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, groupList.get(i).getGroupNumber());
+            }
+    
+            @Override
+            public int getBatchSize() {
+                return groupList.size();
+            }
+        });
     }
     
     @Override

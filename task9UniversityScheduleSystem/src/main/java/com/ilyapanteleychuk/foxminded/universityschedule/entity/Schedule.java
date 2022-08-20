@@ -7,19 +7,14 @@ import java.util.Objects;
 
 public class Schedule implements Entity {
 
-    private long id;
+    private long schedule_id;
     private List<Lesson> lessons;
     
     public Schedule() {
     }
     
-    public Schedule(long id, List<Lesson> lessons) {
-        this.id = id;
-        this.lessons = lessons;
-    }
-    
-    public Schedule(long id) {
-        this.id = id;
+    public Schedule(long schedule_id) {
+        this.schedule_id = schedule_id;
     }
     
     public Schedule(List<Lesson> lessons) {
@@ -34,12 +29,12 @@ public class Schedule implements Entity {
         lesson.setSchedule(this);
     }
     
-    public long getId() {
-        return id;
+    public long getSchedule_id() {
+        return schedule_id;
     }
     
-    public void setId(long id) {
-        this.id = id;
+    public void setSchedule_id(long schedule_id) {
+        this.schedule_id = schedule_id;
     }
     
     public List<Lesson> getLessons() {
@@ -53,8 +48,7 @@ public class Schedule implements Entity {
     @Override
     public String toString() {
         return "Schedule{" +
-                "id=" + id +
-                ", lessons=" + lessons +
+                "id=" + schedule_id +
                 '}';
     }
     
@@ -63,11 +57,11 @@ public class Schedule implements Entity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Schedule schedule = (Schedule) o;
-        return id == schedule.id && Objects.equals(lessons, schedule.lessons);
+        return schedule_id == schedule.schedule_id && Objects.equals(lessons, schedule.lessons);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, lessons);
+        return Objects.hash(schedule_id, lessons);
     }
 }

@@ -3,9 +3,13 @@ package com.ilyapanteleychuk.foxminded.universityschedule.dao.impl;
 import com.ilyapanteleychuk.foxminded.universityschedule.dao.CommonDao;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Audience;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -31,10 +35,18 @@ public class AudienceDao implements CommonDao<Audience> {
     @Override
     public void addAll(List<Audience> audienceList) {
         final String insertSql = "INSERT INTO university.audience VALUES(?, ?)";
-        for(int i = 0; i <= audienceList.size(); i++){
-            jdbcTemplate.update(insertSql, audienceList.get(i).getAudienceNumber(),
-                    audienceList.get(i).getAudienceCapacity());
-        }
+        jdbcTemplate.batchUpdate(insertSql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, audienceList.get(i).getAudienceNumber());
+                ps.setInt(2, audienceList.get(i).getAudienceCapacity());
+            }
+    
+            @Override
+            public int getBatchSize() {
+                return audienceList.size();
+            }
+        });
     }
     
     @Override

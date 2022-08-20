@@ -4,8 +4,12 @@ import com.ilyapanteleychuk.foxminded.universityschedule.dao.CommonDao;
 import com.ilyapanteleychuk.foxminded.universityschedule.dao.mapper.TeacherLessonMapper;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.TeacherLesson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -38,24 +42,32 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
                 teacherLesson.getType(),
                 teacherLesson.getGroup().getId(),
                 teacherLesson.getOrder(),
-                teacherLesson.getSchedule().getId());
+                teacherLesson.getSchedule().getSchedule_id());
     }
     
     @Override
-    public void addAll(List<TeacherLesson> teacherLessons) {
-        final String insertSql = "INSERT INTO university.lesson(%s)";
+    public void addAll(List<TeacherLesson> lessons) {
+        final String insertSql = "INSERT INTO university.lesson(%s) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?)";
         String query = String.format(insertSql, columns);
         query = query.replace("[", "")
                 .replace("]", "");
-        for(TeacherLesson teacherLesson : teacherLessons){
-            jdbcTemplate.update(query,
-                    teacherLesson.getAudience().getId(),
-                    teacherLesson.getSubject().getId(),
-                    teacherLesson.getDate(), teacherLesson.getType(),
-                    teacherLesson.getGroup().getId(),
-                    teacherLesson.getOrder(),
-                    teacherLesson.getSchedule().getId());
-        }
+        jdbcTemplate.batchUpdate(query, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setLong(1, lessons.get(i).getAudience().getId());
+                ps.setLong(2, lessons.get(i).getSubject().getId());
+                ps.setObject(3, lessons.get(i).getDate());
+                ps.setString(4, lessons.get(i).getType());
+                ps.setLong(5, lessons.get(i).getGroup().getId());
+                ps.setInt(6, lessons.get(i).getOrder());
+                ps.setLong(7, lessons.get(i).getSchedule().getSchedule_id());
+            }
+            @Override
+            public int getBatchSize() {
+                return lessons.size();
+            }
+        });
     }
     
     @Override
@@ -75,7 +87,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
                 teacherLesson.getType(),
                 teacherLesson.getGroup().getId(),
                 teacherLesson.getOrder(),
-                teacherLesson.getSchedule().getId()}, new TeacherLessonMapper())
+                teacherLesson.getSchedule().getSchedule_id()}, new TeacherLessonMapper())
                 .stream().findAny().orElse(null);
     }
     
@@ -110,7 +122,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
         jdbcTemplate.update(updateSql, teacherLesson.getAudience().getId(),
                 teacherLesson.getSubject().getId(), teacherLesson.getDate(),
                 teacherLesson.getType(), teacherLesson.getGroup().getId(),
-                teacherLesson.getOrder(), teacherLesson.getSchedule().getId(), id);
+                teacherLesson.getOrder(), teacherLesson.getSchedule().getSchedule_id(), id);
     }
     
     @Override
@@ -122,7 +134,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
         jdbcTemplate.update(deleteSql,  teacherLesson.getAudience().getId(),
                 teacherLesson.getSubject().getId(), teacherLesson.getDate(),
                 teacherLesson.getType(), teacherLesson.getGroup().getId(),
-                teacherLesson.getOrder(), teacherLesson.getSchedule().getId());
+                teacherLesson.getOrder(), teacherLesson.getSchedule().getSchedule_id());
     }
     
     @Override

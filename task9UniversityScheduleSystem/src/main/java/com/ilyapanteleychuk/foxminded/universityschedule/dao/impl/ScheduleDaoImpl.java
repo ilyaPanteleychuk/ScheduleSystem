@@ -23,14 +23,14 @@ public class ScheduleDaoImpl implements ScheduleDao {
     @Override
     public void add(Schedule schedule) {
         final String insertSql = "INSERT INTO university.schedule VALUES(?)";
-        jdbcTemplate.update(insertSql, schedule.getId());
+        jdbcTemplate.update(insertSql, schedule.getSchedule_id());
     }
     
     @Override
     public Schedule getById(int id) {
         final String selectSql = "SELECT * FROM university.schedule WHERE schedule_id = ?";
         return jdbcTemplate.query(selectSql, new Object[]{id},
-                        new BeanPropertyRowMapper<Schedule>())
+                        new BeanPropertyRowMapper<>(Schedule.class))
                 .stream().findAny().orElse(null);
     }
     
