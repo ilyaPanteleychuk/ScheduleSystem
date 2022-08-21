@@ -50,16 +50,14 @@ public class GroupDao implements CommonDao<Group> {
     public Group get(Group group) {
         final String selectSql = "SELECT * FROM university.groups " +
                 "WHERE groupnumber = ?";
-        return jdbcTemplate.query(selectSql, new Object[]{group.getGroupNumber()},
-                new BeanPropertyRowMapper<>(Group.class))
-                .stream().findAny().orElse(null);
+        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Group.class),
+                        group.getGroupNumber()).stream().findAny().orElse(null);
     }
     
     @Override
     public Group getById(int id) {
         final String selectSql = "SELECT * FROM university.groups WHERE id = ?";
-        return jdbcTemplate.query(selectSql,
-                        new Object[]{id}, new BeanPropertyRowMapper<>(Group.class))
+        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Group.class), id)
                 .stream().findAny().orElse(null);
     }
     

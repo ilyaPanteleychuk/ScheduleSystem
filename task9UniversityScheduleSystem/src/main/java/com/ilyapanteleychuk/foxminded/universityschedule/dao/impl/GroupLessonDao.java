@@ -18,7 +18,7 @@ public class GroupLessonDao implements CommonDao<GroupLesson> {
     
     private final JdbcTemplate jdbcTemplate;
     private static final List<String> columns = List.of("audience_id", "subject_id",
-            "lesson_date", "lesson_type", "teacher_id", "lesson_order", "schedule_id");
+            "date", "type", "teacher_id", "lesson_order", "schedule_id");
     private static final String SELECT_SQL = "SELECT %s, %s, %s, %s FROM university.lesson " +
             "INNER JOIN university.audience ON lesson.audience_id = audience.id " +
             "INNER JOIN university.subject ON lesson.subject_id = subject.id " +
@@ -31,7 +31,8 @@ public class GroupLessonDao implements CommonDao<GroupLesson> {
     
     @Override
     public void add(GroupLesson groupLesson) {
-        final String INSERT_SQL = "INSERT INTO university.lesson(%s)";
+        final String INSERT_SQL = "INSERT INTO university.lesson(%s) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?)";
         String query = String.format(INSERT_SQL, GroupLessonDao.columns);
         query = query.replace("[", "").replace("]", "");
         jdbcTemplate.update(query,
@@ -41,12 +42,13 @@ public class GroupLessonDao implements CommonDao<GroupLesson> {
                 groupLesson.getType(),
                 groupLesson.getTeacher().getId(),
                 groupLesson.getOrder(),
-                groupLesson.getSchedule().getSchedule_id());
+                groupLesson.getSchedule().getId());
     }
     
     @Override
     public void addAll(List<GroupLesson> lessons) {
-        final String INSERT_SQL = "INSERT INTO university.lesson(%s) VALUES(?, ?, ?, ?, ?, ?, ?)";
+        final String INSERT_SQL = "INSERT INTO university.lesson(%s) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?)";
         String query = String.format(INSERT_SQL, GroupLessonDao.columns);
         query = query.replace("[", "").replace("]", "");
         jdbcTemplate.batchUpdate(query, new BatchPreparedStatementSetter() {
@@ -58,7 +60,7 @@ public class GroupLessonDao implements CommonDao<GroupLesson> {
                 ps.setString(4, lessons.get(i).getType());
                 ps.setLong(5, lessons.get(i).getTeacher().getId());
                 ps.setInt(6, lessons.get(i).getOrder());
-                ps.setLong(7, lessons.get(i).getSchedule().getSchedule_id());
+                ps.setLong(7, lessons.get(i).getSchedule().getId());
             }
             @Override
             public int getBatchSize() {
@@ -77,10 +79,14 @@ public class GroupLessonDao implements CommonDao<GroupLesson> {
                 "AND lesson_order = ? AND schedule_id = ?";
         final String query = sql.replace("[", "")
                 .replace("]", "") + whereClause;
-        return jdbcTemplate.query(query, new Object[]{
-                groupLesson.getAudience().getId(), groupLesson.getSubject().getId(),
-                groupLesson.getDate(), groupLesson.getType(), groupLesson.getTeacher().getId(),
-                groupLesson.getOrder(), groupLesson.getSchedule().getSchedule_id()}, new GroupLessonMapper()
+        return jdbcTemplate.query(query, new GroupLessonMapper(),
+                groupLesson.getAudience().getId(),
+                groupLesson.getSubject().getId(),
+                groupLesson.getDate(),
+                groupLesson.getType(),
+                groupLesson.getTeacher().getId(),
+                groupLesson.getOrder(),
+                groupLesson.getSchedule().getId()
         ).stream().findFirst().orElse(null);
     }
     
@@ -93,7 +99,7 @@ public class GroupLessonDao implements CommonDao<GroupLesson> {
         final String query = sql.replace("[", "")
                 .replace("]", "") + whereClause;
         return jdbcTemplate.query(query,
-                new Object[]{id}, new GroupLessonMapper())
+                 new GroupLessonMapper(), id)
                 .stream().findAny().orElse(null);
     }
     
@@ -115,7 +121,7 @@ public class GroupLessonDao implements CommonDao<GroupLesson> {
         jdbcTemplate.update(updateSql, groupLesson.getAudience().getId(),
                 groupLesson.getSubject().getId(), groupLesson.getDate(),
                 groupLesson.getType(), groupLesson.getTeacher().getId(),
-                groupLesson.getOrder(), groupLesson.getSchedule().getSchedule_id(), id);
+                groupLesson.getOrder(), groupLesson.getSchedule().getId(), id);
     }
     
     @Override
@@ -127,7 +133,7 @@ public class GroupLessonDao implements CommonDao<GroupLesson> {
         jdbcTemplate.update(deleteSql,  groupLesson.getAudience().getId(),
                 groupLesson.getSubject().getId(), groupLesson.getDate(),
                 groupLesson.getType(), groupLesson.getTeacher().getId(),
-                groupLesson.getOrder(), groupLesson.getSchedule().getSchedule_id());
+                groupLesson.getOrder(), groupLesson.getSchedule().getId());
     }
     
     @Override

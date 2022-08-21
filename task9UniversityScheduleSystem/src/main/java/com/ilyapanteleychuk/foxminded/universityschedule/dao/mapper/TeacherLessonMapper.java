@@ -17,8 +17,8 @@ public class TeacherLessonMapper implements RowMapper<TeacherLesson> {
         Schedule schedule = new Schedule(rs.getInt("schedule_id"));
         teacherLesson.setAudience(audience);
         teacherLesson.setSubject(subject);
-        teacherLesson.setDate(rs.getDate("lesson_date").toLocalDate());
-        teacherLesson.setType(rs.getString("lesson_type"));
+        teacherLesson.setDate(rs.getDate("date").toLocalDate());
+        teacherLesson.setType(rs.getString("type"));
         teacherLesson.setGroup(group);
         teacherLesson.setOrder(rs.getInt("lesson_order"));
         teacherLesson.setSchedule(schedule);

@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -49,16 +48,15 @@ public class SubjectDao implements CommonDao<Subject> {
     @Override
     public Subject get(Subject subject) {
         final String selectSql = "SELECT * FROM university.subject WHERE title = ?";
-        return jdbcTemplate.query(selectSql, new Object[]{subject.getTitle()},
-                new BeanPropertyRowMapper<>(Subject.class))
-                .stream().findAny().orElse(null);
+        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Subject.class),
+                        subject.getTitle()).stream().findAny().orElse(null);
     }
     
     @Override
     public Subject getById(int id) {
         final String selectSql = "SELECT * FROM university.subject WHERE id = ?";
-        return jdbcTemplate.query(selectSql, new Object[]{id},
-                        new BeanPropertyRowMapper<>(Subject.class))
+        return jdbcTemplate.query(selectSql,
+                        new BeanPropertyRowMapper<>(Subject.class), id)
                 .stream().findAny().orElse(null);
     }
     

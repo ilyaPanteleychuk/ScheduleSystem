@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -31,7 +30,8 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
     
     @Override
     public void add(TeacherLesson teacherLesson) {
-        final String insertSql = "INSERT INTO university.lesson(%s)";
+        final String insertSql = "INSERT INTO university.lesson(%s) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?)";
         String query = String.format(insertSql, columns);
         query = query.replace("[", "")
                 .replace("]", "");
@@ -42,7 +42,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
                 teacherLesson.getType(),
                 teacherLesson.getGroup().getId(),
                 teacherLesson.getOrder(),
-                teacherLesson.getSchedule().getSchedule_id());
+                teacherLesson.getSchedule().getId());
     }
     
     @Override
@@ -61,7 +61,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
                 ps.setString(4, lessons.get(i).getType());
                 ps.setLong(5, lessons.get(i).getGroup().getId());
                 ps.setInt(6, lessons.get(i).getOrder());
-                ps.setLong(7, lessons.get(i).getSchedule().getSchedule_id());
+                ps.setLong(7, lessons.get(i).getSchedule().getId());
             }
             @Override
             public int getBatchSize() {
@@ -80,15 +80,15 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
                 "AND lesson_order = ? AND schedule_id = ?";
         final String query = sql.replace("[", "")
                 .replace("]", "") + whereClause;
-        return jdbcTemplate.query(query, new Object[]{
-                teacherLesson.getAudience().getId(),
-                teacherLesson.getSubject().getId(),
-                teacherLesson.getDate(),
-                teacherLesson.getType(),
-                teacherLesson.getGroup().getId(),
-                teacherLesson.getOrder(),
-                teacherLesson.getSchedule().getSchedule_id()}, new TeacherLessonMapper())
-                .stream().findAny().orElse(null);
+        return jdbcTemplate.query(query, new TeacherLessonMapper(),
+                        teacherLesson.getAudience().getId(),
+                        teacherLesson.getSubject().getId(),
+                        teacherLesson.getDate(),
+                        teacherLesson.getType(),
+                        teacherLesson.getGroup().getId(),
+                        teacherLesson.getOrder(),
+                        teacherLesson.getSchedule().getId()
+                ).stream().findAny().orElse(null);
     }
     
     @Override
@@ -99,8 +99,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
         String whereClause = "WHERE lesson.id = ?";
         final String query = sql.replace("[", "")
                 .replace("]", "") + whereClause;
-        return jdbcTemplate.query(query,
-                        new Object[]{id}, new TeacherLessonMapper())
+        return jdbcTemplate.query(query, new TeacherLessonMapper(), id)
                 .stream().findAny().orElse(null);
     }
     
@@ -122,7 +121,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
         jdbcTemplate.update(updateSql, teacherLesson.getAudience().getId(),
                 teacherLesson.getSubject().getId(), teacherLesson.getDate(),
                 teacherLesson.getType(), teacherLesson.getGroup().getId(),
-                teacherLesson.getOrder(), teacherLesson.getSchedule().getSchedule_id(), id);
+                teacherLesson.getOrder(), teacherLesson.getSchedule().getId(), id);
     }
     
     @Override
@@ -134,7 +133,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
         jdbcTemplate.update(deleteSql,  teacherLesson.getAudience().getId(),
                 teacherLesson.getSubject().getId(), teacherLesson.getDate(),
                 teacherLesson.getType(), teacherLesson.getGroup().getId(),
-                teacherLesson.getOrder(), teacherLesson.getSchedule().getSchedule_id());
+                teacherLesson.getOrder(), teacherLesson.getSchedule().getId());
     }
     
     @Override

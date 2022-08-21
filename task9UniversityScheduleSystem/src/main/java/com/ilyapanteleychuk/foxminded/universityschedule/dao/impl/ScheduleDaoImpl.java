@@ -13,7 +13,7 @@ import java.util.List;
 public class ScheduleDaoImpl implements ScheduleDao {
     
     private final JdbcTemplate jdbcTemplate;
-    private static final List<String> columns = List.of("schedule_id");
+    private static final List<String> columns = List.of("schedule.id");
     
     @Autowired
     public ScheduleDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -23,14 +23,14 @@ public class ScheduleDaoImpl implements ScheduleDao {
     @Override
     public void add(Schedule schedule) {
         final String insertSql = "INSERT INTO university.schedule VALUES(?)";
-        jdbcTemplate.update(insertSql, schedule.getSchedule_id());
+        jdbcTemplate.update(insertSql, schedule.getId());
     }
     
     @Override
     public Schedule getById(int id) {
-        final String selectSql = "SELECT * FROM university.schedule WHERE schedule_id = ?";
-        return jdbcTemplate.query(selectSql, new Object[]{id},
-                        new BeanPropertyRowMapper<>(Schedule.class))
+        final String selectSql = "SELECT * FROM university.schedule WHERE id = ?";
+        return jdbcTemplate.query(selectSql,
+                        new BeanPropertyRowMapper<>(Schedule.class), id)
                 .stream().findAny().orElse(null);
     }
     

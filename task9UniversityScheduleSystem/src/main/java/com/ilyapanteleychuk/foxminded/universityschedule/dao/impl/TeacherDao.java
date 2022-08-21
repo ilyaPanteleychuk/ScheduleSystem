@@ -53,16 +53,16 @@ public class TeacherDao implements CommonDao<Teacher> {
         final String selectSql = "SELECT * FROM university.teacher " +
                 "WHERE first_name = ? AND last_name = ?";
         return jdbcTemplate.query(selectSql,
-                        new Object[]{teacher.getFirstName(), teacher.getLastName()},
-                new BeanPropertyRowMapper<>(Teacher.class))
+                        new BeanPropertyRowMapper<>(Teacher.class),
+                        teacher.getFirstName(), teacher.getLastName())
                 .stream().findAny().orElse(null);
     }
     
     @Override
     public Teacher getById(int id) {
         final String selectSql = "SELECT * FROM university.teacher WHERE id = ?";
-        return jdbcTemplate.query(selectSql, new Object[]{id},
-                        new BeanPropertyRowMapper<>(Teacher.class))
+        return jdbcTemplate.query(selectSql,
+                        new BeanPropertyRowMapper<>(Teacher.class), id)
                         .stream().findAny().orElse(null);
     }
     

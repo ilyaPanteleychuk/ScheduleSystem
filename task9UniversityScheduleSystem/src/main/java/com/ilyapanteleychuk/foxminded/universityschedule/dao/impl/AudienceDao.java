@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -53,17 +52,16 @@ public class AudienceDao implements CommonDao<Audience> {
     public Audience get(Audience audience) {
         final String selectSql = "SELECT * FROM university.audience " +
                 "WHERE audience_number = ? AND audience_capacity = ?";
-        return jdbcTemplate.query(selectSql, new Object[]{
-                audience.getAudienceNumber(), audience.getAudienceCapacity()
-                }, new BeanPropertyRowMapper<>(Audience.class))
+        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Audience.class),
+                        audience.getAudienceNumber(), audience.getAudienceCapacity())
                 .stream().findAny().orElse(null);
     }
     
     @Override
     public Audience getById(int id) {
         final String selectSql = "SELECT * FROM university.audience WHERE id = ?";
-        return jdbcTemplate.query(selectSql, new Object[]{id},
-                        new BeanPropertyRowMapper<>(Audience.class))
+        return jdbcTemplate.query(selectSql,
+                        new BeanPropertyRowMapper<>(Audience.class), id)
                 .stream().findAny().orElse(null);
     }
     
