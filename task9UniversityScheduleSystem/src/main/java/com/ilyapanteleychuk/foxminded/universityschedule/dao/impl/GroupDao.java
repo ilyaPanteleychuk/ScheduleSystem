@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -16,8 +15,17 @@ import java.util.List;
 @Component
 public class GroupDao implements CommonDao<Group> {
     
+    private static final List<String> COLUMNS = List.of("groupnumber");
+    private static final String INSERT_SQL =
+            "INSERT INTO university.groups VALUES(?)";
+    private static final String SELECT_SQL =
+            "SELECT * FROM university.groups ";
+    private static final String UPDATE_SQL =
+            "UPDATE university.groups SET groupnumber = ? ";
+    private static final String DELETE_SQL =
+            "DELETE FROM university.groups ";
+    
     private final JdbcTemplate jdbcTemplate;
-    private static final List<String> columns = List.of("groupnumber");
     
     @Autowired
     public GroupDao(JdbcTemplate jdbcTemplate) {
@@ -26,14 +34,12 @@ public class GroupDao implements CommonDao<Group> {
     
     @Override
     public void add(Group group) {
-        final String insertSql = "INSERT INTO university.groups VALUES(?)";
-        jdbcTemplate.update(insertSql, group.getGroupNumber());
+        jdbcTemplate.update(INSERT_SQL, group.getGroupNumber());
     }
     
     @Override
     public void addAll(List<Group> groupList) {
-        final String insertSql = "INSERT INTO university.groups VALUES(?)";
-        jdbcTemplate.batchUpdate(insertSql, new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(INSERT_SQL, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setInt(1, groupList.get(i).getGroupNumber());
@@ -47,45 +53,48 @@ public class GroupDao implements CommonDao<Group> {
     }
     
     @Override
-    public Group get(Group group) {
-        final String selectSql = "SELECT * FROM university.groups " +
-                "WHERE groupnumber = ?";
+    public Group load(Group group) {
+        String whereClause = "WHERE groupnumber = ?";
+        final String selectSql = SELECT_SQL + whereClause;
         return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Group.class),
                         group.getGroupNumber()).stream().findAny().orElse(null);
     }
     
     @Override
-    public Group getById(int id) {
-        final String selectSql = "SELECT * FROM university.groups WHERE id = ?";
+    public Group loadById(long id) {
+        String whereClause = "WHERE id = ?";
+        final String selectSql = SELECT_SQL + whereClause;
         return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Group.class), id)
                 .stream().findAny().orElse(null);
     }
     
     @Override
-    public List<Group> getAll() {
-        final String selectSql = "SELECT * FROM university.groups";
-        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Group.class));
+    public List<Group> loadAll() {
+        return jdbcTemplate.query(SELECT_SQL, new BeanPropertyRowMapper<>(Group.class));
     }
     
     @Override
-    public void update(int id, Group group) {
-        final String updateSql = "UPDATE university.groups SET groupnumber = ? WHERE id = ?";
+    public void update(long id, Group group) {
+        String whereClause = "WHERE id = ?";
+        final String updateSql = UPDATE_SQL + whereClause;
         jdbcTemplate.update(updateSql, group.getGroupNumber(), id);
     }
     
     @Override
     public void delete(Group group) {
-        final String deleteSql = "DELETE FROM university.groups WHERE groupnumber = ?";
+        String whereClause = "WHERE groupnumber = ?";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql, group.getGroupNumber());
     }
     
     @Override
-    public void deleteById(int id) {
-        final String deleteSql = "DELETE FROM university.groups WHERE id = ?";
+    public void deleteById(long id) {
+        String whereClause = "WHERE id = ?";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql, id);
     }
     
     public static List<String> getColumns(){
-        return columns;
+        return COLUMNS;
     }
 }

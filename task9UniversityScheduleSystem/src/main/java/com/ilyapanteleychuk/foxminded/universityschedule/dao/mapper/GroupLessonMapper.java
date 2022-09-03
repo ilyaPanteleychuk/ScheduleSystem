@@ -15,7 +15,7 @@ public class GroupLessonMapper implements RowMapper<GroupLesson> {
         Subject subject = new Subject(rs.getString("title"));
         Teacher teacher = new Teacher(rs.getString("first_name"),
                 rs.getString("last_name"));
-        Schedule schedule = new Schedule(rs.getInt("schedule_id"));
+        Schedule schedule = new GroupSchedule(rs.getInt("schedule_id"));
         groupLesson.setAudience(audience);
         groupLesson.setSubject(subject);
         groupLesson.setDate(rs.getDate("date").toLocalDate());

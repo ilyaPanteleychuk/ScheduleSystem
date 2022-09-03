@@ -15,8 +15,18 @@ import java.util.List;
 @Component
 public class AudienceDao implements CommonDao<Audience> {
     
+    private static final List<String> COLUMNS = List.of("audience_number");
+    private static final String INSERT_SQL =
+            "INSERT INTO university.audience VALUES(?, ?)";
+    private static final String SELECT_SQL =
+            "SELECT * FROM university.audience ";
+    private static final String UPDATE_SQL =
+            "UPDATE university.audience SET audience_number = ?, audience_capacity = ? ";
+    private static final String DELETE_SQL =
+            "DELETE FROM university.audience ";
+    
     private final JdbcTemplate jdbcTemplate;
-    private static final List<String> columns = List.of("audience_number");
+    
     
     @Autowired
     public AudienceDao(JdbcTemplate jdbcTemplate) {
@@ -26,15 +36,13 @@ public class AudienceDao implements CommonDao<Audience> {
     
     @Override
     public void add(Audience audience) {
-        final String insertSql = "INSERT INTO university.audience VALUES(?, ?)";
-        jdbcTemplate.update(insertSql, audience.getAudienceNumber(),
+        jdbcTemplate.update(INSERT_SQL, audience.getAudienceNumber(),
                 audience.getAudienceCapacity());
     }
     
     @Override
     public void addAll(List<Audience> audienceList) {
-        final String insertSql = "INSERT INTO university.audience VALUES(?, ?)";
-        jdbcTemplate.batchUpdate(insertSql, new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(INSERT_SQL, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setInt(1, audienceList.get(i).getAudienceNumber());
@@ -49,51 +57,52 @@ public class AudienceDao implements CommonDao<Audience> {
     }
     
     @Override
-    public Audience get(Audience audience) {
-        final String selectSql = "SELECT * FROM university.audience " +
-                "WHERE audience_number = ? AND audience_capacity = ?";
+    public Audience load(Audience audience) {
+        String whereClause = "WHERE audience_number = ? AND audience_capacity = ?";
+        final String selectSql = SELECT_SQL + whereClause;
         return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Audience.class),
                         audience.getAudienceNumber(), audience.getAudienceCapacity())
                 .stream().findAny().orElse(null);
     }
     
     @Override
-    public Audience getById(int id) {
-        final String selectSql = "SELECT * FROM university.audience WHERE id = ?";
+    public Audience loadById(long id) {
+        String whereClause = "WHERE id = ?";
+        final String selectSql = SELECT_SQL + whereClause;
         return jdbcTemplate.query(selectSql,
                         new BeanPropertyRowMapper<>(Audience.class), id)
                 .stream().findAny().orElse(null);
     }
     
     @Override
-    public List<Audience> getAll() {
-        final String select_sql = "SELECT * FROM university.audience";
-        return jdbcTemplate.query(select_sql, new BeanPropertyRowMapper<>(Audience.class));
+    public List<Audience> loadAll() {
+        return jdbcTemplate.query(SELECT_SQL, new BeanPropertyRowMapper<>(Audience.class));
     }
     
     @Override
-    public void update(int id, Audience audience) {
-        final String updateSql = "UPDATE university.audience " +
-                "SET audience_number = ?, audience_capacity = ? WHERE id = ?";
+    public void update(long id, Audience audience) {
+        String whereClause = "WHERE id = ?";
+        String updateSql = UPDATE_SQL + whereClause;
         jdbcTemplate.update(updateSql, audience.getAudienceNumber(),
                 audience.getAudienceCapacity(), id);
     }
     
     @Override
     public void delete(Audience audience) {
-        final String deleteSql = "DELETE FROM university.audience " +
-                "WHERE audience_number = ? AND audience_capacity = ?";
+        String whereClause = "WHERE audience_number = ? AND audience_capacity = ?";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql,
                 audience.getAudienceNumber(), audience.getAudienceCapacity());
     }
     
     @Override
-    public void deleteById(int id) {
-        final String deleteSql = "DELETE FROM university.audience WHERE id = ?";
+    public void deleteById(long id) {
+        String whereClause = "WHERE id = ?";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql, id);
     }
     
     public static List<String> getColumns(){
-        return columns;
+        return COLUMNS;
     }
 }

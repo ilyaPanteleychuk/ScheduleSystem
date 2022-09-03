@@ -15,8 +15,17 @@ import java.util.List;
 @Component
 public class SubjectDao implements CommonDao<Subject> {
     
+    private static final List<String> COLUMNS = List.of("title");
+    private static final String INSERT_SQL =
+            "INSERT INTO university.subject VALUES(?) ";
+    private static final String SELECT_SQL =
+            "SELECT * FROM university.subject ";
+    private static final String UPDATE_SQL =
+            "UPDATE university.subject SET title = ? ";
+    private static final String DELETE_SQL =
+            "DELETE FROM university.subject ";
+    
     private final JdbcTemplate jdbcTemplate;
-    private static final List<String> columns = List.of("title");
     
     @Autowired
     public SubjectDao(JdbcTemplate jdbcTemplate) {
@@ -25,14 +34,12 @@ public class SubjectDao implements CommonDao<Subject> {
     
     @Override
     public void add(Subject subject) {
-        final String insertSql = "INSERT INTO university.subject VALUES(?)";
-        jdbcTemplate.update(insertSql, subject.getTitle());
+        jdbcTemplate.update(INSERT_SQL, subject.getTitle());
     }
     
     @Override
     public void addAll(List<Subject> subjectList) {
-        final String insertSql = "INSERT INTO university.subject VALUES(?)";
-        jdbcTemplate.batchUpdate(insertSql, new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(INSERT_SQL, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, subjectList.get(i).getTitle());
@@ -46,45 +53,49 @@ public class SubjectDao implements CommonDao<Subject> {
     }
     
     @Override
-    public Subject get(Subject subject) {
-        final String selectSql = "SELECT * FROM university.subject WHERE title = ?";
+    public Subject load(Subject subject) {
+        String whereClause = "WHERE title = ?";
+        final String selectSql = SELECT_SQL + whereClause;
         return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Subject.class),
                         subject.getTitle()).stream().findAny().orElse(null);
     }
     
     @Override
-    public Subject getById(int id) {
-        final String selectSql = "SELECT * FROM university.subject WHERE id = ?";
+    public Subject loadById(long id) {
+        String whereClause = "WHERE id = ?";
+        final String selectSql = SELECT_SQL + whereClause;
         return jdbcTemplate.query(selectSql,
                         new BeanPropertyRowMapper<>(Subject.class), id)
                 .stream().findAny().orElse(null);
     }
     
     @Override
-    public List<Subject> getAll() {
-        final String selectSql = "SELECT * FROM university.subject";
-        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Subject.class));
+    public List<Subject> loadAll() {
+        return jdbcTemplate.query(SELECT_SQL, new BeanPropertyRowMapper<>(Subject.class));
     }
     
     @Override
-    public void update(int id, Subject subject) {
-        final String updateSql = "UPDATE university.subject SET title = ? WHERE id = ?";
+    public void update(long id, Subject subject) {
+        String whereClause = "WHERE id = ?";
+        final String updateSql = UPDATE_SQL + whereClause;
         jdbcTemplate.update(updateSql, subject.getTitle(), id);
     }
     
     @Override
     public void delete(Subject subject) {
-        final String deleteSql = "DELETE FROM university.subject WHERE title = ?";
+        String whereClause = "WHERE title = ?";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql, subject.getTitle());
     }
     
     @Override
-    public void deleteById(int id) {
-        final String deleteSql = "DELETE FROM university.subject WHERE id = ?";
+    public void deleteById(long id) {
+        String whereClause = "WHERE id = ?";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql, id);
     }
     
     public static List<String> getColumns(){
-        return columns;
+        return COLUMNS;
     }
 }

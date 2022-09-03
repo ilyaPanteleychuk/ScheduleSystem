@@ -34,7 +34,14 @@ public class TeacherLesson extends Lesson implements Entity{
     @Override
     public String toString() {
         return "TeacherLesson{" +
-                "group=" + group +
+                "id=" + id +
+                ", subject=" + subject +
+                ", audience=" + audience +
+                ", group=" + group +
+                ", date=" + date +
+                ", type='" + type + '\'' +
+                ", order=" + order +
+                ", schedule=" + schedule +
                 '}';
     }
     

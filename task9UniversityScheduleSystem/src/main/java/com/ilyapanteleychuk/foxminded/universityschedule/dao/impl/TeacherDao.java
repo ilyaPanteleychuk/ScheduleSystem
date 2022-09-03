@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -16,8 +15,17 @@ import java.util.List;
 @Component
 public class TeacherDao implements CommonDao<Teacher> {
     
+    private static final List<String> COLUMNS = List.of("first_name, last_name");
+    private static final String INSERT_SQL =
+            "INSERT INTO university.teacher VALUES(?, ?)";
+    private static final String SELECT_SQL =
+            "SELECT * FROM university.teacher ";
+    private static final String UPDATE_SQL =
+            "UPDATE university.teacher SET first_name = ?, last_name = ? ";
+    private static final String DELETE_SQL =
+            "DELETE FROM university.teacher ";
+    
     private final JdbcTemplate jdbcTemplate;
-    private static final List<String> columns = List.of("first_name, last_name");
     
     @Autowired
     public TeacherDao(JdbcTemplate jdbcTemplate) {
@@ -27,14 +35,13 @@ public class TeacherDao implements CommonDao<Teacher> {
     
     @Override
     public void add(Teacher teacher) {
-        final String insertSql = "INSERT INTO university.teacher VALUES(?, ?)";
-        jdbcTemplate.update(insertSql, teacher.getFirstName(), teacher.getLastName());
+        jdbcTemplate.update(INSERT_SQL, teacher.getFirstName(), teacher.getLastName());
     }
     
     @Override
     public void addAll(List<Teacher> teacherList) {
-        final String insertSql = "INSERT INTO university.teacher VALUES(?, ?)";
-        jdbcTemplate.batchUpdate(insertSql, new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(INSERT_SQL, new BatchPreparedStatementSetter() {
+            
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setString(1, teacherList.get(i).getFirstName());
@@ -49,9 +56,9 @@ public class TeacherDao implements CommonDao<Teacher> {
     }
     
     @Override
-    public Teacher get(Teacher teacher) {
-        final String selectSql = "SELECT * FROM university.teacher " +
-                "WHERE first_name = ? AND last_name = ?";
+    public Teacher load(Teacher teacher) {
+        String whereClause = "WHERE first_name AND last_name = ?";
+        String selectSql = SELECT_SQL + whereClause;
         return jdbcTemplate.query(selectSql,
                         new BeanPropertyRowMapper<>(Teacher.class),
                         teacher.getFirstName(), teacher.getLastName())
@@ -59,40 +66,41 @@ public class TeacherDao implements CommonDao<Teacher> {
     }
     
     @Override
-    public Teacher getById(int id) {
-        final String selectSql = "SELECT * FROM university.teacher WHERE id = ?";
+    public Teacher loadById(long id) {
+        String whereClause = "WHERE id = ?";
+        final String selectSql = SELECT_SQL + whereClause;
         return jdbcTemplate.query(selectSql,
                         new BeanPropertyRowMapper<>(Teacher.class), id)
                         .stream().findAny().orElse(null);
     }
     
     @Override
-    public List<Teacher> getAll() {
-        final String selectSql = "SELECT * FROM university.teacher";
-        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Teacher.class));
+    public List<Teacher> loadAll() {
+        return jdbcTemplate.query(SELECT_SQL, new BeanPropertyRowMapper<>(Teacher.class));
     }
     
     @Override
-    public void update(int id, Teacher teacher) {
-        final String updateSql = "UPDATE university.teacher " +
-                "SET first_name = ?, last_name = ? WHERE id = ?";
+    public void update(long id, Teacher teacher) {
+        String whereClause = "WHERE id = ?";
+        final String updateSql = UPDATE_SQL + whereClause;
         jdbcTemplate.update(updateSql, teacher.getFirstName(), teacher.getLastName(), id);
     }
     
     @Override
     public void delete(Teacher teacher) {
-        final String deleteSql = "DELETE FROM university.teacher " +
-                "WHERE first_name = ? AND last_name = ?";
+        String whereClause = "WHERE first_name = ? AND last_name = ?";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql, teacher.getFirstName(), teacher.getLastName());
     }
     
     @Override
-    public void deleteById(int id) {
-        final String deleteSql = "DELETE FROM university.teacher WHERE id = ?";
+    public void deleteById(long id) {
+        String whereClause = "WHERE id = ?";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql, id);
     }
     
     public static List<String> getColumns(){
-        return columns;
+        return COLUMNS;
     }
 }

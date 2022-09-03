@@ -1,6 +1,7 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.dao.impl;
 
 import com.ilyapanteleychuk.foxminded.universityschedule.dao.CommonDao;
+import com.ilyapanteleychuk.foxminded.universityschedule.dao.LessonDao;
 import com.ilyapanteleychuk.foxminded.universityschedule.dao.mapper.TeacherLessonMapper;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.TeacherLesson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,23 @@ import java.util.List;
 
 
 @Component
-public class TeacherLessonDao implements CommonDao<TeacherLesson> {
+public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<TeacherLesson> {
     
-    private final JdbcTemplate jdbcTemplate;
-    private static final List<String> columns = List.of("audience_id", "subject_id",
+    private static final List<String> COLUMNS = List.of("audience_id", "subject_id",
             "lesson_date", "lesson_type", "group_id", "lesson_order", "schedule_id");
+    private static final String INSERT_SQL =
+            "INSERT INTO university.lesson(%s) VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_SQL = "SELECT %s, %s, %s, %s FROM university.lesson " +
             "INNER JOIN university.audience ON lesson.audience_id = audience.id " +
             "INNER JOIN university.subject ON lesson.subject_id = subject.id " +
             "INNER JOIN university.groups ON lesson.group_id = groups.id ";
+    private static final String UPDATE_SQL =
+            "UPDATE university.lesson SET audience_id = ?, " +
+            "subject_id = ?, lesson_date = ?, lesson_type = ?, group_id = ?, " +
+            "lesson_order = ?, schedule_id = ? ";
+    private static final String DELETE_SQL = "DELETE FROM university.lesson ";
+    
+    private final JdbcTemplate jdbcTemplate;
     
     @Autowired
     public TeacherLessonDao(JdbcTemplate jdbcTemplate) {
@@ -29,10 +38,21 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
     }
     
     @Override
+    public List<TeacherLesson> loadByUserIdPerTimePeriod(long id, int timePeriod) {
+        String sql = String.format(SELECT_SQL, COLUMNS,
+                AudienceDao.getColumns(), SubjectDao.getColumns(),
+                GroupDao.getColumns());
+        String whereClause = "WHERE date >= NOW() " +
+                "AND date < (NOW + (INTERVAL '1 day' * ?)) " +
+                "AND teacher_id = ?";
+        final String query = sql.replace("[", "")
+                .replace("]", "") + whereClause;
+        return jdbcTemplate.query(query, new TeacherLessonMapper(), timePeriod, id);
+    }
+    
+    @Override
     public void add(TeacherLesson teacherLesson) {
-        final String insertSql = "INSERT INTO university.lesson(%s) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?)";
-        String query = String.format(insertSql, columns);
+        String query = String.format(INSERT_SQL, COLUMNS);
         query = query.replace("[", "")
                 .replace("]", "");
         jdbcTemplate.update(query,
@@ -47,9 +67,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
     
     @Override
     public void addAll(List<TeacherLesson> lessons) {
-        final String insertSql = "INSERT INTO university.lesson(%s) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?)";
-        String query = String.format(insertSql, columns);
+        String query = String.format(INSERT_SQL, COLUMNS);
         query = query.replace("[", "")
                 .replace("]", "");
         jdbcTemplate.batchUpdate(query, new BatchPreparedStatementSetter() {
@@ -71,8 +89,8 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
     }
     
     @Override
-    public TeacherLesson get(TeacherLesson teacherLesson) {
-        String sql = String.format(SELECT_SQL, TeacherLessonDao.columns,
+    public TeacherLesson load(TeacherLesson teacherLesson) {
+        String sql = String.format(SELECT_SQL, TeacherLessonDao.COLUMNS,
                 AudienceDao.getColumns(), SubjectDao.getColumns(),
                 TeacherDao.getColumns());
         String whereClause = "WHERE audience_id = ? AND subject_id = ? " +
@@ -92,8 +110,8 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
     }
     
     @Override
-    public TeacherLesson getById(int id) {
-        String sql = String.format(SELECT_SQL, TeacherLessonDao.columns,
+    public TeacherLesson loadById(long id) {
+        String sql = String.format(SELECT_SQL, TeacherLessonDao.COLUMNS,
                 AudienceDao.getColumns(), SubjectDao.getColumns(),
                 TeacherDao.getColumns());
         String whereClause = "WHERE lesson.id = ?";
@@ -104,8 +122,8 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
     }
     
     @Override
-    public List<TeacherLesson> getAll() {
-        String sql = String.format(SELECT_SQL, TeacherLessonDao.columns,
+    public List<TeacherLesson> loadAll() {
+        String sql = String.format(SELECT_SQL, TeacherLessonDao.COLUMNS,
                 AudienceDao.getColumns(), SubjectDao.getColumns(),
                 TeacherDao.getColumns());
         final String query = sql.replace("[", "")
@@ -114,10 +132,9 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
     }
     
     @Override
-    public void update(int id, TeacherLesson teacherLesson) {
-        final String updateSql = "UPDATE university.lesson SET audience_id = ?, " +
-                "subject_id = ?, lesson_date = ?, lesson_type = ?, group_id = ?, " +
-                "lesson_order = ?, schedule_id = ? WHERE id = ?";
+    public void update(long id, TeacherLesson teacherLesson) {
+        String whereClause = "WHERE id = ?";
+        final String updateSql = UPDATE_SQL + whereClause;
         jdbcTemplate.update(updateSql, teacherLesson.getAudience().getId(),
                 teacherLesson.getSubject().getId(), teacherLesson.getDate(),
                 teacherLesson.getType(), teacherLesson.getGroup().getId(),
@@ -126,10 +143,11 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
     
     @Override
     public void delete(TeacherLesson teacherLesson) {
-        final String deleteSql = "DELETE FROM university.lesson " +
+        String whereClause =
                 "WHERE audience_id = ? AND subject_id = ? AND lesson_date = ? " +
                 "AND lesson_type = ? AND group_id = ? " +
                 "AND lesson_order = ? AND schedule_id = ? ";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql,  teacherLesson.getAudience().getId(),
                 teacherLesson.getSubject().getId(), teacherLesson.getDate(),
                 teacherLesson.getType(), teacherLesson.getGroup().getId(),
@@ -137,12 +155,13 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson> {
     }
     
     @Override
-    public void deleteById(int id) {
-        final String deleteSql = "DELETE FROM university.lesson WHERE id = ?";
+    public void deleteById(long id) {
+        String whereClause = "WHERE id = ?";
+        final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql, id);
     }
     
     public static List<String> getColumns(){
-        return columns;
+        return COLUMNS;
     }
 }
