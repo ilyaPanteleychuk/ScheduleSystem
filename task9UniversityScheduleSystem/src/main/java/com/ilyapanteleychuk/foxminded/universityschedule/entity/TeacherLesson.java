@@ -41,7 +41,6 @@ public class TeacherLesson extends Lesson implements Entity{
                 ", date=" + date +
                 ", type='" + type + '\'' +
                 ", order=" + order +
-                ", schedule=" + schedule +
                 '}';
     }
     

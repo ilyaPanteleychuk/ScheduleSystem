@@ -12,7 +12,6 @@ public abstract class Lesson implements Entity {
     protected LocalDate date;
     protected String type;
     protected int order;
-    protected Schedule schedule;
     
     protected Lesson() {
     }
@@ -84,14 +83,6 @@ public abstract class Lesson implements Entity {
         this.type = type;
     }
     
-    public Schedule getSchedule() {
-        return schedule;
-    }
-    
-    public void setSchedule(Schedule schedule) {
-        this.schedule = schedule;
-    }
-    
     @Override
     public String toString() {
         return "Lesson{" +
@@ -113,12 +104,11 @@ public abstract class Lesson implements Entity {
                 && Objects.equals(subject, lesson.subject)
                 && Objects.equals(audience, lesson.audience)
                 && Objects.equals(date, lesson.date)
-                && Objects.equals(type, lesson.type)
-                && Objects.equals(schedule, lesson.schedule);
+                && Objects.equals(type, lesson.type);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, subject, audience, date, type, order, schedule);
+        return Objects.hash(id, subject, audience, date, type, order);
     }
 }

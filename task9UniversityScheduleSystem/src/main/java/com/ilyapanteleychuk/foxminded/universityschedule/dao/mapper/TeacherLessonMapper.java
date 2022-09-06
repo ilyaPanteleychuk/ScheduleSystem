@@ -14,14 +14,12 @@ public class TeacherLessonMapper implements RowMapper<TeacherLesson> {
         Audience audience = new Audience(rs.getInt("audience_number"));
         Subject subject = new Subject(rs.getString("title"));
         Group group = new Group(rs.getInt("groupnumber"));
-        Schedule schedule = new TeacherSchedule(rs.getInt("schedule_id"));
         teacherLesson.setAudience(audience);
         teacherLesson.setSubject(subject);
         teacherLesson.setDate(rs.getDate("date").toLocalDate());
         teacherLesson.setType(rs.getString("type"));
         teacherLesson.setGroup(group);
         teacherLesson.setOrder(rs.getInt("lesson_order"));
-        teacherLesson.setSchedule(schedule);
         return teacherLesson;
     }
 }

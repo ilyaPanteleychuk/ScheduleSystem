@@ -17,17 +17,17 @@ import java.util.List;
 public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<TeacherLesson> {
     
     private static final List<String> COLUMNS = List.of("audience_id", "subject_id",
-            "lesson_date", "lesson_type", "group_id", "lesson_order", "schedule_id");
+            "date", "type", "group_id", "lesson_order");
     private static final String INSERT_SQL =
-            "INSERT INTO university.lesson(%s) VALUES(?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO university.lesson(%s) VALUES(?, ?, ?, ?, ?, ?)";
     private static final String SELECT_SQL = "SELECT %s, %s, %s, %s FROM university.lesson " +
             "INNER JOIN university.audience ON lesson.audience_id = audience.id " +
             "INNER JOIN university.subject ON lesson.subject_id = subject.id " +
             "INNER JOIN university.groups ON lesson.group_id = groups.id ";
     private static final String UPDATE_SQL =
             "UPDATE university.lesson SET audience_id = ?, " +
-            "subject_id = ?, lesson_date = ?, lesson_type = ?, group_id = ?, " +
-            "lesson_order = ?, schedule_id = ? ";
+            "subject_id = ?, date = ?, type = ?, group_id = ?, " +
+            "lesson_order = ? ";
     private static final String DELETE_SQL = "DELETE FROM university.lesson ";
     
     private final JdbcTemplate jdbcTemplate;
@@ -61,8 +61,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<Tea
                 teacherLesson.getDate(),
                 teacherLesson.getType(),
                 teacherLesson.getGroup().getId(),
-                teacherLesson.getOrder(),
-                teacherLesson.getSchedule().getId());
+                teacherLesson.getOrder());
     }
     
     @Override
@@ -79,7 +78,6 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<Tea
                 ps.setString(4, lessons.get(i).getType());
                 ps.setLong(5, lessons.get(i).getGroup().getId());
                 ps.setInt(6, lessons.get(i).getOrder());
-                ps.setLong(7, lessons.get(i).getSchedule().getId());
             }
             @Override
             public int getBatchSize() {
@@ -95,7 +93,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<Tea
                 TeacherDao.getColumns());
         String whereClause = "WHERE audience_id = ? AND subject_id = ? " +
                 "AND lesson_date = ? AND lesson_type = ? AND group_id = ? " +
-                "AND lesson_order = ? AND schedule_id = ?";
+                "AND lesson_order = ? ";
         final String query = sql.replace("[", "")
                 .replace("]", "") + whereClause;
         return jdbcTemplate.query(query, new TeacherLessonMapper(),
@@ -104,8 +102,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<Tea
                         teacherLesson.getDate(),
                         teacherLesson.getType(),
                         teacherLesson.getGroup().getId(),
-                        teacherLesson.getOrder(),
-                        teacherLesson.getSchedule().getId()
+                        teacherLesson.getOrder()
                 ).stream().findAny().orElse(null);
     }
     
@@ -138,7 +135,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<Tea
         jdbcTemplate.update(updateSql, teacherLesson.getAudience().getId(),
                 teacherLesson.getSubject().getId(), teacherLesson.getDate(),
                 teacherLesson.getType(), teacherLesson.getGroup().getId(),
-                teacherLesson.getOrder(), teacherLesson.getSchedule().getId(), id);
+                teacherLesson.getOrder(), id);
     }
     
     @Override
@@ -146,12 +143,12 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<Tea
         String whereClause =
                 "WHERE audience_id = ? AND subject_id = ? AND lesson_date = ? " +
                 "AND lesson_type = ? AND group_id = ? " +
-                "AND lesson_order = ? AND schedule_id = ? ";
+                "AND lesson_order = ? ";
         final String deleteSql = DELETE_SQL + whereClause;
         jdbcTemplate.update(deleteSql,  teacherLesson.getAudience().getId(),
                 teacherLesson.getSubject().getId(), teacherLesson.getDate(),
                 teacherLesson.getType(), teacherLesson.getGroup().getId(),
-                teacherLesson.getOrder(), teacherLesson.getSchedule().getId());
+                teacherLesson.getOrder());
     }
     
     @Override
