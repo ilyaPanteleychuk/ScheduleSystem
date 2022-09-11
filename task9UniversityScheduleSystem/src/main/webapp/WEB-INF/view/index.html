@@ -1,15 +1,11 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="https" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <spring:url value="/resources/styles/style.css" var="styleCss" />
-    <link href="${styleCss}" rel="stylesheet" />
-    <link href="https:https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+    <link rel="stylesheet" type="text/css" th:href="@{css/style.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
           rel="stylesheet">
     <title>Document</title>
 </head>
@@ -18,9 +14,7 @@
         <div class="header__column faculty">
             <h3 class="header__column__title">Faculty</h3>
             <select name="faculty" id="faculty" class="header__column__input">
-                <option value="fit">FIT</option>
-                <option value="ftp">FTP</option>
-                <option value="frgtb">FRGTB</option>
+                <option value=""></option>
             </select>
         </div>
 
@@ -67,18 +61,14 @@
             <tr>
               <td class="table__field">
                 <div class="table__field__rectangle">
-                    Huy huyevskiy jopa jopivskaya
                 </div>
                 <div class="table__field__rectangle">
-                    Huy kehefew jopa jopivskaya
                 </div>
                 <div class="table__field__rectangle">
-                    Huy asasfa jopa jopivskaya
                 </div>
               </td>
               <td class="table__field">
                 <div class="table__field__rectangle">
-                    Kristina
                 </div>
               </td>
               <td class="table__field">
