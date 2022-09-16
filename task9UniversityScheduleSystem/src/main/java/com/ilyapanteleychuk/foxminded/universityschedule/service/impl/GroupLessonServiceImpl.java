@@ -10,7 +10,8 @@ import java.util.List;
 
 
 @Service
-public class GroupLessonServiceImpl implements CommonService<GroupLesson>, GroupLessonService {
+public class GroupLessonServiceImpl implements
+        CommonService<GroupLesson>, GroupLessonService {
     
     private final GroupLessonDaoImpl groupLessonDaoImpl;
     private final FacultyService facultyService;
@@ -18,7 +19,8 @@ public class GroupLessonServiceImpl implements CommonService<GroupLesson>, Group
     
     @Autowired
     public GroupLessonServiceImpl(GroupLessonDaoImpl groupLessonDaoImpl,
-                                  FacultyService facultyService, GroupServiceImpl groupServiceImpl) {
+                                  FacultyService facultyService,
+                                  GroupServiceImpl groupServiceImpl) {
         this.groupLessonDaoImpl = groupLessonDaoImpl;
         this.facultyService = facultyService;
         this.groupServiceImpl = groupServiceImpl;

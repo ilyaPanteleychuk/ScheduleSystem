@@ -1,7 +1,6 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.dao;
 
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Entity;
-
 import java.util.List;
 
 
@@ -22,5 +21,4 @@ public interface CommonDao <T extends Entity> {
     void delete(T t);
     
     void deleteById(long id);
-    
 }

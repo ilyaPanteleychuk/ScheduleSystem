@@ -55,7 +55,8 @@ public class GroupLessonDaoImpl implements CommonDao<GroupLesson>, GroupLessonDa
     @Override
     public void add(GroupLesson groupLesson) {
         String query = String.format(INSERT_SQL, GroupLessonDaoImpl.COLUMNS);
-        query = query.replace("[", "").replace("]", "");
+        query = query.replace("[", "")
+                .replace("]", "");
         jdbcTemplate.update(query,
                 groupLesson.getAudience().getId(),
                 groupLesson.getSubject().getId(),
@@ -68,7 +69,8 @@ public class GroupLessonDaoImpl implements CommonDao<GroupLesson>, GroupLessonDa
     @Override
     public void addAll(List<GroupLesson> lessons) {
         String query = String.format(INSERT_SQL, GroupLessonDaoImpl.COLUMNS);
-        query = query.replace("[", "").replace("]", "");
+        query = query.replace("[", "")
+                .replace("]", "");
         jdbcTemplate.batchUpdate(query, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {

@@ -7,10 +7,10 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+
 
 @Component
 public class FacultyDaoImpl implements CommonDao<Faculty> {
@@ -65,13 +65,15 @@ public class FacultyDaoImpl implements CommonDao<Faculty> {
     public Faculty loadById(long id) {
         String whereClause = "WHERE id = ?";
         String query = SELECT_SQL + whereClause;
-        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Faculty.class),
-                id).stream().findAny().orElse(null);
+        return jdbcTemplate.query(query,
+                new BeanPropertyRowMapper<>(Faculty.class), id)
+                .stream().findAny().orElse(null);
     }
     
     @Override
     public List<Faculty> loadAll() {
-        return jdbcTemplate.query(SELECT_SQL, new BeanPropertyRowMapper<>(Faculty.class));
+        return jdbcTemplate.query(SELECT_SQL,
+                new BeanPropertyRowMapper<>(Faculty.class));
     }
     
     @Override

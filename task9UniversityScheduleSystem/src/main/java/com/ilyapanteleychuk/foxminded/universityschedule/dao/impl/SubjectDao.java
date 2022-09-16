@@ -56,8 +56,9 @@ public class SubjectDao implements CommonDao<Subject> {
     public Subject load(Subject subject) {
         String whereClause = "WHERE title = ?";
         final String selectSql = SELECT_SQL + whereClause;
-        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Subject.class),
-                        subject.getTitle()).stream().findAny().orElse(null);
+        return jdbcTemplate.query(selectSql,
+                new BeanPropertyRowMapper<>(Subject.class), subject.getTitle())
+                .stream().findAny().orElse(null);
     }
     
     @Override
@@ -71,7 +72,8 @@ public class SubjectDao implements CommonDao<Subject> {
     
     @Override
     public List<Subject> loadAll() {
-        return jdbcTemplate.query(SELECT_SQL, new BeanPropertyRowMapper<>(Subject.class));
+        return jdbcTemplate.query(SELECT_SQL,
+                new BeanPropertyRowMapper<>(Subject.class));
     }
     
     @Override

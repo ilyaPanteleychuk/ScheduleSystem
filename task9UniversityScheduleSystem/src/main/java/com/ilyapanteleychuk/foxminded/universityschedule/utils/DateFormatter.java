@@ -1,6 +1,5 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.utils;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;

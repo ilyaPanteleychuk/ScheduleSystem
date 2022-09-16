@@ -7,5 +7,4 @@ import java.util.List;
 public interface GroupDao {
     
     List<Group> loadGroupsByFacultyId(long facultyId);
-    
 }

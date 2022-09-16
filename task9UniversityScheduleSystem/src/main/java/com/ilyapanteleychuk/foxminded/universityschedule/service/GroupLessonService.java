@@ -1,7 +1,6 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.service;
 
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.GroupLesson;
-
 import java.util.List;
 
 

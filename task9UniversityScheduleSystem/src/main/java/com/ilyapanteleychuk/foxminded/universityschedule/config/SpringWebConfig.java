@@ -17,14 +17,14 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
-
 import javax.sql.DataSource;
 
 
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = "com.ilyapanteleychuk.foxminded.universityschedule")
-public class SpringWebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+public class SpringWebConfig extends WebMvcConfigurerAdapter implements
+        ApplicationContextAware {
     
     private ApplicationContext applicationContext;
     

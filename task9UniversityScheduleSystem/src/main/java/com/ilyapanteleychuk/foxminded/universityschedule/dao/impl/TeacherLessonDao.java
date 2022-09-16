@@ -21,7 +21,8 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<Tea
                     "group_id", "lesson_order");
     private static final String INSERT_SQL =
             "INSERT INTO university.lesson(%s) VALUES(?, ?, ?, ?, ?, ?)";
-    private static final String SELECT_SQL = "SELECT %s, %s, %s, %s FROM university.lesson " +
+    private static final String SELECT_SQL =
+            "SELECT %s, %s, %s, %s FROM university.lesson " +
             "INNER JOIN university.audience ON lesson.audience_id = audience.id " +
             "INNER JOIN university.subject ON lesson.subject_id = subject.id " +
             "INNER JOIN university.groups ON lesson.group_id = groups.id ";

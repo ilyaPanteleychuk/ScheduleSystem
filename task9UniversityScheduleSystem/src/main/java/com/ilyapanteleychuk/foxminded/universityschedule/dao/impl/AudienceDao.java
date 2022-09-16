@@ -61,8 +61,10 @@ public class AudienceDao implements CommonDao<Audience> {
     public Audience load(Audience audience) {
         String whereClause = "WHERE audience_number = ? AND audience_capacity = ?";
         final String selectSql = SELECT_SQL + whereClause;
-        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(Audience.class),
-                        audience.getAudienceNumber(), audience.getAudienceCapacity())
+        return jdbcTemplate.query(selectSql,
+                        new BeanPropertyRowMapper<>(Audience.class),
+                        audience.getAudienceNumber(),
+                        audience.getAudienceCapacity())
                 .stream().findAny().orElse(null);
     }
     
@@ -77,7 +79,8 @@ public class AudienceDao implements CommonDao<Audience> {
     
     @Override
     public List<Audience> loadAll() {
-        return jdbcTemplate.query(SELECT_SQL, new BeanPropertyRowMapper<>(Audience.class));
+        return jdbcTemplate.query(SELECT_SQL,
+                new BeanPropertyRowMapper<>(Audience.class));
     }
     
     @Override
