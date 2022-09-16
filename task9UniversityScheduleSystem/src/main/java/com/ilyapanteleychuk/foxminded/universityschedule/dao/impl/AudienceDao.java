@@ -15,7 +15,8 @@ import java.util.List;
 @Component
 public class AudienceDao implements CommonDao<Audience> {
     
-    private static final List<String> COLUMNS = List.of("audience_number");
+    private static final List<String> COLUMNS =
+            List.of("audience.id", "audience_number");
     private static final String INSERT_SQL =
             "INSERT INTO university.audience VALUES(?, ?)";
     private static final String SELECT_SQL =

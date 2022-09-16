@@ -7,18 +7,16 @@
     <link rel="stylesheet" type="text/css" th:href="@{css/style.css}"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
           rel="stylesheet">
-    <title>FacultyPage</title>
+    <title>Document</title>
 </head>
 <body>
-    <form action="groupPage" method="get" class="header">
-        <div class="header__column faculty">
-            <h3 class="header__column__title">Faculty</h3>
-            <select name="facultyId" class="header__column__input">
-                <option
-                        th:each="faculty : ${facultyList}" th:value="${faculty.id}"
-                        th:text="${faculty.title}">
-                </option>
-            </select>
+    <form action="tableResult" method="get" class="header">
+        <div class="header__column">
+            <h3 class="header__column__title">Group</h3>
+                <select name="groupNumber" id="group" class="header__column__input">
+                    <option th:each="group : ${groups}" th:value="${group.id}"
+                    th:text="${group.groupNumber}"/>
+                </select>
         </div>
 
         <div>

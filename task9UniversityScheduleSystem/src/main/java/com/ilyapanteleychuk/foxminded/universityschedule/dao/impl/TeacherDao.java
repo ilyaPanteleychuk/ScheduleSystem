@@ -15,7 +15,8 @@ import java.util.List;
 @Component
 public class TeacherDao implements CommonDao<Teacher> {
     
-    private static final List<String> COLUMNS = List.of("first_name, last_name");
+    private static final List<String> COLUMNS =
+            List.of("teacher.id", "first_name, last_name");
     private static final String INSERT_SQL =
             "INSERT INTO university.teacher VALUES(?, ?)";
     private static final String SELECT_SQL =

@@ -7,12 +7,14 @@ public class Group implements Entity{
     
     private long id;
     private int groupNumber;
+    private Faculty faculty;
     
     public Group() {
     }
     
-    public Group(int groupNumber) {
+    public Group(int groupNumber, Faculty faculty) {
         this.groupNumber = groupNumber;
+        this.faculty = faculty;
     }
     
     public Group(long id, int groupNumber) {
@@ -36,11 +38,20 @@ public class Group implements Entity{
         this.groupNumber = groupNumber;
     }
     
+    public Faculty getFaculty() {
+        return faculty;
+    }
+    
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
+    
     @Override
     public String toString() {
         return "Group{" +
                 "id=" + id +
                 ", groupNumber=" + groupNumber +
+                ", faculty=" + faculty +
                 '}';
     }
     
@@ -49,11 +60,12 @@ public class Group implements Entity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return id == group.id && groupNumber == group.groupNumber;
+        return id == group.id && groupNumber == group.groupNumber
+                && Objects.equals(faculty, group.faculty);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, groupNumber);
+        return Objects.hash(id, groupNumber, faculty);
     }
 }

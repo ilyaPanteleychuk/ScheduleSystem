@@ -100,6 +100,17 @@ option{
     font-weight: 300;
 }
 
+.submit__button{
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
 .faculty{
     width: 30%;
 }
@@ -141,7 +152,7 @@ th{
 
 .table__field__rectangle{
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     background: lightgreen;
     border-radius: 4px;

@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class SubjectDao implements CommonDao<Subject> {
     
-    private static final List<String> COLUMNS = List.of("title");
+    private static final List<String> COLUMNS = List.of("subject.id", "title");
     private static final String INSERT_SQL =
             "INSERT INTO university.subject VALUES(?) ";
     private static final String SELECT_SQL =

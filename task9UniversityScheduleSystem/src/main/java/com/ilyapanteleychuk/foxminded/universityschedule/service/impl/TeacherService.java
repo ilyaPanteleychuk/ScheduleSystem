@@ -1,7 +1,8 @@
-package com.ilyapanteleychuk.foxminded.universityschedule.service;
+package com.ilyapanteleychuk.foxminded.universityschedule.service.impl;
 
 import com.ilyapanteleychuk.foxminded.universityschedule.dao.impl.TeacherDao;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Teacher;
+import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

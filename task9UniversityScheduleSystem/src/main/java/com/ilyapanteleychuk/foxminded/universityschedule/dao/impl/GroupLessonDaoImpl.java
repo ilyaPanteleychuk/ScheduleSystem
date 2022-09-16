@@ -1,7 +1,7 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.dao.impl;
 
 import com.ilyapanteleychuk.foxminded.universityschedule.dao.CommonDao;
-import com.ilyapanteleychuk.foxminded.universityschedule.dao.LessonDao;
+import com.ilyapanteleychuk.foxminded.universityschedule.dao.GroupLessonDao;
 import com.ilyapanteleychuk.foxminded.universityschedule.dao.mapper.GroupLessonMapper;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.GroupLesson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +14,11 @@ import java.util.List;
 
 
 @Component
-public class GroupLessonDao implements CommonDao<GroupLesson>, LessonDao<GroupLesson> {
+public class GroupLessonDaoImpl implements CommonDao<GroupLesson>, GroupLessonDao {
     
-    private static final List<String> COLUMNS = List.of("audience_id", "subject_id",
-            "date", "type", "teacher_id", "lesson_order");
+    private static final List<String> COLUMNS =
+            List.of("lesson.id", "audience_id", "subject_id", "date", "type",
+                    "teacher_id", "lesson_order");
     private static final String SELECT_SQL =
             "SELECT %s, %s, %s, %s FROM university.lesson " +
             "INNER JOIN university.audience ON lesson.audience_id = audience.id " +
@@ -34,26 +35,26 @@ public class GroupLessonDao implements CommonDao<GroupLesson>, LessonDao<GroupLe
     private final JdbcTemplate jdbcTemplate;
     
     @Autowired
-    public GroupLessonDao(JdbcTemplate jdbcTemplate) {
+    public GroupLessonDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
     
     @Override
-    public List<GroupLesson> loadByUserIdPerTimePeriod(long id, int timePeriod) {
-        String sql = String.format(SELECT_SQL, GroupLessonDao.COLUMNS,
+    public List<GroupLesson> loadLessonsPerWeek(long groupId) {
+        String sql = String.format(SELECT_SQL, GroupLessonDaoImpl.COLUMNS,
                 AudienceDao.getColumns(), SubjectDao.getColumns(),
                 TeacherDao.getColumns());
-        String whereClause = "WHERE date >= NOW() AND " +
-                "date < (NOW() + (interval '1 day' * ?)) " +
+        String whereClause = "WHERE date >=(NOW() - (interval '1 day')) AND " +
+                "date <= (NOW() + (interval '1 day' * 7)) " +
                 "AND group_id = ?";
         final String query = sql.replace("[", "")
                 .replace("]", "") + whereClause;
-        return jdbcTemplate.query(query, new GroupLessonMapper(), timePeriod, id);
+        return jdbcTemplate.query(query, new GroupLessonMapper(), groupId);
     }
     
     @Override
     public void add(GroupLesson groupLesson) {
-        String query = String.format(INSERT_SQL, GroupLessonDao.COLUMNS);
+        String query = String.format(INSERT_SQL, GroupLessonDaoImpl.COLUMNS);
         query = query.replace("[", "").replace("]", "");
         jdbcTemplate.update(query,
                 groupLesson.getAudience().getId(),
@@ -66,7 +67,7 @@ public class GroupLessonDao implements CommonDao<GroupLesson>, LessonDao<GroupLe
     
     @Override
     public void addAll(List<GroupLesson> lessons) {
-        String query = String.format(INSERT_SQL, GroupLessonDao.COLUMNS);
+        String query = String.format(INSERT_SQL, GroupLessonDaoImpl.COLUMNS);
         query = query.replace("[", "").replace("]", "");
         jdbcTemplate.batchUpdate(query, new BatchPreparedStatementSetter() {
             @Override
@@ -87,7 +88,7 @@ public class GroupLessonDao implements CommonDao<GroupLesson>, LessonDao<GroupLe
     
     @Override
     public GroupLesson load(GroupLesson groupLesson) {
-        String sql = String.format(SELECT_SQL, GroupLessonDao.COLUMNS,
+        String sql = String.format(SELECT_SQL, GroupLessonDaoImpl.COLUMNS,
                 AudienceDao.getColumns(), SubjectDao.getColumns(),
                 TeacherDao.getColumns());
         String whereClause = "WHERE audience_id = ? AND subject_id = ? " +
@@ -107,7 +108,7 @@ public class GroupLessonDao implements CommonDao<GroupLesson>, LessonDao<GroupLe
     
     @Override
     public GroupLesson loadById(long id) {
-        String sql = String.format(SELECT_SQL, GroupLessonDao.COLUMNS,
+        String sql = String.format(SELECT_SQL, GroupLessonDaoImpl.COLUMNS,
                 AudienceDao.getColumns(), SubjectDao.getColumns(),
                 TeacherDao.getColumns());
         String whereClause = "WHERE lesson.id = ?";
@@ -120,7 +121,7 @@ public class GroupLessonDao implements CommonDao<GroupLesson>, LessonDao<GroupLe
     
     @Override
     public List<GroupLesson> loadAll() {
-        String sql = String.format(SELECT_SQL, GroupLessonDao.COLUMNS,
+        String sql = String.format(SELECT_SQL, GroupLessonDaoImpl.COLUMNS,
                 AudienceDao.getColumns(), SubjectDao.getColumns(),
                 TeacherDao.getColumns());
         final String query = sql.replace("[", "")

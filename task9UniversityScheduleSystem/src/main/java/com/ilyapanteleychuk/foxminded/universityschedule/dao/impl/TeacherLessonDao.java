@@ -16,8 +16,9 @@ import java.util.List;
 @Component
 public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<TeacherLesson> {
     
-    private static final List<String> COLUMNS = List.of("audience_id", "subject_id",
-            "date", "type", "group_id", "lesson_order");
+    private static final List<String> COLUMNS =
+            List.of("lesson.id", "audience_id", "subject_id", "date", "type",
+                    "group_id", "lesson_order");
     private static final String INSERT_SQL =
             "INSERT INTO university.lesson(%s) VALUES(?, ?, ?, ?, ?, ?)";
     private static final String SELECT_SQL = "SELECT %s, %s, %s, %s FROM university.lesson " +
@@ -41,7 +42,7 @@ public class TeacherLessonDao implements CommonDao<TeacherLesson>, LessonDao<Tea
     public List<TeacherLesson> loadByUserIdPerTimePeriod(long id, int timePeriod) {
         String sql = String.format(SELECT_SQL, COLUMNS,
                 AudienceDao.getColumns(), SubjectDao.getColumns(),
-                GroupDao.getColumns());
+                GroupDaoImpl.getColumns());
         String whereClause = "WHERE date >= NOW() " +
                 "AND date < (NOW + (INTERVAL '1 day' * ?)) " +
                 "AND teacher_id = ?";

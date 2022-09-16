@@ -13,9 +13,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Component
-public class FacultyDao implements CommonDao<Faculty> {
+public class FacultyDaoImpl implements CommonDao<Faculty> {
     
-    private static final List<String> COLUMNS = List.of("title");
+    private static final List<String> COLUMNS =
+            List.of("faculty.id as id_faculty", "faculty.title as title_faculty");
     private static final String INSERT_SQL =
             "INSERT INTO university.faculty VALUES(?) ";
     private static final String SELECT_SQL =
@@ -28,7 +29,7 @@ public class FacultyDao implements CommonDao<Faculty> {
     private final JdbcTemplate jdbcTemplate;
     
     @Autowired
-    public FacultyDao(JdbcTemplate jdbcTemplate) {
+    public FacultyDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
     
