@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{css/style.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+          rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <form action="groupScheduleResult" method="get" class="header">
+        <div class="header__column">
+            <h3 class="header__column__title">Group</h3>
+                <select name="groupNumber" id="group" class="header__column__input">
+                    <option th:each="group : ${groups}" th:value="${group.id}"
+                    th:text="${group.groupNumber}"/>
+                </select>
+        </div>
+
+        <div>
+            <button type="submit" value="Show">Show</button>
+        </div>
+    </form>
+</body>
+</html>
