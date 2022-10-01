@@ -6,6 +6,7 @@ import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
@@ -18,56 +19,53 @@ public class GroupLessonServiceImpl implements
     private final GroupLessonDaoImpl groupLessonDaoImpl;
     
     @Autowired
-    public GroupLessonServiceImpl(ScheduleFormatterService<GroupLesson> scheduleFormatterService,
+    public GroupLessonServiceImpl(ScheduleFormatterService<GroupLesson>
+                                              scheduleFormatterService,
                                   GroupLessonDaoImpl groupLessonDaoImpl) {
         this.scheduleFormatterService = scheduleFormatterService;
         this.groupLessonDaoImpl = groupLessonDaoImpl;
     }
     
     @Override
+    @Transactional
     public Map<String,List<GroupLesson>> loadLessonsPerWeek(long id) {
         List<GroupLesson> lessons = groupLessonDaoImpl.loadLessonsPerWeek(id);
         return scheduleFormatterService.formatLessons(lessons);
     }
     
     @Override
+    @Transactional
     public void add(GroupLesson groupLesson) {
-        groupLessonDaoImpl.add(groupLesson);
+        groupLessonDaoImpl.save(groupLesson);
     }
     
     @Override
+    @Transactional
     public void addAll(List<GroupLesson> groupLessons) {
-        groupLessonDaoImpl.addAll(groupLessons);
+        groupLessonDaoImpl.saveAll(groupLessons);
     }
     
     @Override
-    public GroupLesson load(GroupLesson groupLesson) {
-        return groupLessonDaoImpl.load(groupLesson);
-    }
-    
-    @Override
+    @Transactional
     public GroupLesson loadById(long id) {
         return groupLessonDaoImpl.loadById(id);
     }
     
     @Override
+    @Transactional
     public List<GroupLesson> loadAll() {
         return groupLessonDaoImpl.loadAll();
     }
     
     @Override
-    public void update(long id, GroupLesson groupLesson) {
-        groupLessonDaoImpl.update(id, groupLesson);
+    @Transactional
+    public void update(GroupLesson groupLesson) {
+        groupLessonDaoImpl.update(groupLesson);
     }
     
     @Override
-    public void delete(GroupLesson groupLesson) {
-        groupLessonDaoImpl.delete(groupLesson);
-    }
-    
-    @Override
+    @Transactional
     public void deleteById(long id) {
         groupLessonDaoImpl.deleteById(id);
     }
-    
 }

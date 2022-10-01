@@ -5,6 +5,7 @@ import com.ilyapanteleychuk.foxminded.universityschedule.entity.Subject;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
@@ -18,43 +19,38 @@ public class SubjectService implements CommonService<Subject> {
         this.subjectDao = subjectDao;
     }
     
-    
     @Override
+    @Transactional
     public void add(Subject subject) {
-        subjectDao.add(subject);
+        subjectDao.save(subject);
     }
     
     @Override
+    @Transactional
     public void addAll(List<Subject> subjects) {
-        subjectDao.addAll(subjects);
+        subjectDao.saveAll(subjects);
     }
     
     @Override
-    public Subject load(Subject subject) {
-        return subjectDao.load(subject);
-    }
-    
-    @Override
+    @Transactional
     public Subject loadById(long id) {
         return subjectDao.loadById(id);
     }
     
     @Override
+    @Transactional
     public List<Subject> loadAll() {
         return subjectDao.loadAll();
     }
     
     @Override
-    public void update(long id, Subject subject) {
-        subjectDao.update(id, subject);
+    @Transactional
+    public void update(Subject subject) {
+        subjectDao.update(subject);
     }
     
     @Override
-    public void delete(Subject subject) {
-        subjectDao.delete(subject);
-    }
-    
-    @Override
+    @Transactional
     public void deleteById(long id) {
         subjectDao.deleteById(id);
     }

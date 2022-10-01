@@ -1,7 +1,6 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.dao;
 
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Lesson;
-
 import java.util.List;
 
 

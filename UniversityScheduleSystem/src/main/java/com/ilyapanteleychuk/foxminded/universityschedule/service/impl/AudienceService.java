@@ -5,6 +5,7 @@ import com.ilyapanteleychuk.foxminded.universityschedule.entity.Audience;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
@@ -18,43 +19,38 @@ public class AudienceService implements CommonService<Audience> {
         this.audienceDao = audienceDao;
     }
     
-    
     @Override
+    @Transactional
     public void add(Audience audience) {
-        audienceDao.add(audience);
+        audienceDao.save(audience);
     }
     
     @Override
+    @Transactional
     public void addAll(List<Audience> audienceList) {
-        audienceDao.addAll(audienceList);
+        audienceDao.saveAll(audienceList);
     }
     
     @Override
-    public Audience load(Audience audience) {
-        return audienceDao.load(audience);
-    }
-    
-    @Override
+    @Transactional
     public Audience loadById(long id) {
         return audienceDao.loadById(id);
     }
     
     @Override
+    @Transactional
     public List<Audience> loadAll() {
         return audienceDao.loadAll();
     }
     
     @Override
-    public void update(long id, Audience audience) {
-        audienceDao.update(id, audience);
+    @Transactional
+    public void update(Audience audience) {
+        audienceDao.update( audience);
     }
     
     @Override
-    public void delete(Audience audience) {
-        audienceDao.delete(audience);
-    }
-    
-    @Override
+    @Transactional
     public void deleteById(long id) {
         audienceDao.deleteById(id);
     }

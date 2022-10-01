@@ -1,12 +1,24 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 
-public class Teacher implements Entity{
+@Entity
+@Table(name = "university.teacher")
+public class Teacher {
 
+    @Id
+    @Column(name = "id")
     private long id;
+    
+    @Column(name = "first_name")
     private String firstName;
+    
+    @Column(name = "last_name")
     private String lastName;
     
     public Teacher() {

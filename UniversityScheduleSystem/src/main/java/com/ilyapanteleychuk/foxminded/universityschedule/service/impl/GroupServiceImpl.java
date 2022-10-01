@@ -6,6 +6,7 @@ import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
@@ -20,46 +21,43 @@ public class GroupServiceImpl implements CommonService<Group>, GroupService {
     }
     
     @Override
+    @Transactional
     public List<Group> loadGroupsByFacultyId(long facultyId) {
         return groupDaoImpl.loadGroupsByFacultyId(facultyId);
     }
     
     @Override
+    @Transactional
     public void add(Group group) {
-        groupDaoImpl.add(group);
+        groupDaoImpl.save(group);
     }
     
     @Override
+    @Transactional
     public void addAll(List<Group> groups) {
-        groupDaoImpl.addAll(groups);
+        groupDaoImpl.saveAll(groups);
     }
     
     @Override
-    public Group load(Group group) {
-        return groupDaoImpl.load(group);
-    }
-    
-    @Override
+    @Transactional
     public Group loadById(long id) {
         return groupDaoImpl.loadById(id);
     }
     
     @Override
+    @Transactional
     public List<Group> loadAll() {
         return groupDaoImpl.loadAll();
     }
     
     @Override
-    public void update(long id, Group group) {
-        groupDaoImpl.update(id, group);
+    @Transactional
+    public void update(Group group) {
+        groupDaoImpl.update(group);
     }
     
     @Override
-    public void delete(Group group) {
-        groupDaoImpl.delete(group);
-    }
-    
-    @Override
+    @Transactional
     public void deleteById(long id) {
         groupDaoImpl.deleteById(id);
     }

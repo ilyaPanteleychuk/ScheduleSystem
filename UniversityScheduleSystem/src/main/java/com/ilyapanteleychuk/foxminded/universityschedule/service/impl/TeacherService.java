@@ -5,6 +5,7 @@ import com.ilyapanteleychuk.foxminded.universityschedule.entity.Teacher;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
@@ -19,41 +20,37 @@ public class TeacherService implements CommonService<Teacher> {
     }
     
     @Override
+    @Transactional
     public void add(Teacher teacher) {
-        teacherDao.add(teacher);
+        teacherDao.save(teacher);
     }
     
     @Override
+    @Transactional
     public void addAll(List<Teacher> teacherList) {
-        teacherDao.addAll(teacherList);
+        teacherDao.saveAll(teacherList);
     }
     
     @Override
-    public Teacher load(Teacher teacher) {
-        return teacherDao.load(teacher);
-    }
-    
-    @Override
+    @Transactional
     public Teacher loadById(long id) {
         return teacherDao.loadById(id);
     }
     
     @Override
+    @Transactional
     public List<Teacher> loadAll() {
         return teacherDao.loadAll();
     }
     
     @Override
-    public void update(long id, Teacher teacher) {
-        teacherDao.update(id, teacher);
+    @Transactional
+    public void update(Teacher teacher) {
+        teacherDao.update(teacher);
     }
     
     @Override
-    public void delete(Teacher teacher) {
-        teacherDao.delete(teacher);
-    }
-    
-    @Override
+    @Transactional
     public void deleteById(long id) {
         teacherDao.deleteById(id);
     }

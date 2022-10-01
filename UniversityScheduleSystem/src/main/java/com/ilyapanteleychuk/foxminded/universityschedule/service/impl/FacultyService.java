@@ -5,6 +5,7 @@ import com.ilyapanteleychuk.foxminded.universityschedule.entity.Faculty;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
@@ -19,41 +20,37 @@ public class FacultyService implements CommonService<Faculty> {
     }
     
     @Override
+    @Transactional
     public void add(Faculty faculty) {
-        facultyDaoImpl.add(faculty);
+        facultyDaoImpl.save(faculty);
     }
     
     @Override
+    @Transactional
     public void addAll(List<Faculty> faculties) {
-        facultyDaoImpl.addAll(faculties);
+        facultyDaoImpl.saveAll(faculties);
     }
     
     @Override
-    public Faculty load(Faculty faculty) {
-        return facultyDaoImpl.load(faculty);
-    }
-    
-    @Override
+    @Transactional
     public Faculty loadById(long id) {
         return facultyDaoImpl.loadById(id);
     }
     
     @Override
+    @Transactional
     public List<Faculty> loadAll() {
         return facultyDaoImpl.loadAll();
     }
     
     @Override
-    public void update(long id, Faculty faculty) {
-        facultyDaoImpl.update(id, faculty);
+    @Transactional
+    public void update(Faculty faculty) {
+        facultyDaoImpl.update(faculty);
     }
     
     @Override
-    public void delete(Faculty faculty) {
-        facultyDaoImpl.delete(faculty);
-    }
-    
-    @Override
+    @Transactional
     public void deleteById(long id) {
         facultyDaoImpl.deleteById(id);
     }
