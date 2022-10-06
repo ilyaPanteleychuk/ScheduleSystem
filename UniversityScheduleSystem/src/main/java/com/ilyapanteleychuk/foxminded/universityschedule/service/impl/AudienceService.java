@@ -1,57 +1,63 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.service.impl;
 
-import com.ilyapanteleychuk.foxminded.universityschedule.dao.impl.AudienceDao;
+import com.ilyapanteleychuk.foxminded.universityschedule.dao.AudienceRepository;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Audience;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class AudienceService implements CommonService<Audience> {
     
-    private final AudienceDao audienceDao;
+    private final AudienceRepository audienceRepository;
     
     @Autowired
-    public AudienceService(AudienceDao audienceDao) {
-        this.audienceDao = audienceDao;
+    public AudienceService(AudienceRepository audienceRepository) {
+        this.audienceRepository = audienceRepository;
     }
     
     @Override
     @Transactional
-    public void add(Audience audience) {
-        audienceDao.save(audience);
+    public void save(Audience audience) {
+        audienceRepository.save(audience);
     }
     
     @Override
     @Transactional
-    public void addAll(List<Audience> audienceList) {
-        audienceDao.saveAll(audienceList);
+    public void saveAll(List<Audience> audienceList) {
+        audienceRepository.saveAll(audienceList);
     }
     
     @Override
     @Transactional
-    public Audience loadById(long id) {
-        return audienceDao.loadById(id);
+    public Audience findById(long id) {
+        Optional<Audience> optionalAudience = audienceRepository.findById(id);
+        if(optionalAudience.isPresent()){
+            return optionalAudience.get();
+        }else{
+            return new Audience(0);
+        }
     }
     
     @Override
     @Transactional
-    public List<Audience> loadAll() {
-        return audienceDao.loadAll();
+    public List<Audience> findAll() {
+        return audienceRepository.findAll();
     }
     
     @Override
     @Transactional
     public void update(Audience audience) {
-        audienceDao.update( audience);
+        audienceRepository.save(audience);
     }
     
     @Override
     @Transactional
     public void deleteById(long id) {
-        audienceDao.deleteById(id);
+        audienceRepository.deleteById(id);
     }
 }

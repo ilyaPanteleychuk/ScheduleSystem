@@ -5,13 +5,13 @@ import java.util.List;
 
 public interface CommonService <T> {
     
-    void add(T t);
+    void save(T t);
     
-    void addAll(List<T> t);
+    void saveAll(List<T> t);
     
-    T loadById(long id);
+    T findById(long id);
     
-    List<T> loadAll();
+    List<T> findAll();
     
     void update(T t);
     

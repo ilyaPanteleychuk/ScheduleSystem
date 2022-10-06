@@ -7,7 +7,12 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -27,6 +32,8 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 @EnableWebMvc
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
+@EnableJpaRepositories
+        (basePackages = "com.ilyapanteleychuk.foxminded.universityschedule.dao")
 @ComponentScan(basePackages = "com.ilyapanteleychuk.foxminded.universityschedule")
 public class SpringWebConfig extends WebMvcConfigurerAdapter implements
         ApplicationContextAware {
@@ -92,22 +99,42 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter implements
     }
     
     @Bean
-    public LocalSessionFactoryBean sessionFactory(){
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
+        LocalContainerEntityManagerFactoryBean entityManager =
+                new LocalContainerEntityManagerFactoryBean();
+        entityManager.setDataSource(dataSource());
+        entityManager.setPackagesToScan
                 ("com.ilyapanteleychuk.foxminded.universityschedule.entity");
-        sessionFactory.setHibernateProperties(hibernateProperties());
-        return sessionFactory;
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        entityManager.setJpaVendorAdapter(vendorAdapter);
+        entityManager.setJpaProperties(hibernateProperties());
+        return entityManager;
     }
     
     @Bean
     public PlatformTransactionManager transactionManager(){
-        HibernateTransactionManager transactionManager =
-                new HibernateTransactionManager();
-        transactionManager.setSessionFactory(sessionFactory().getObject());
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
     }
+    
+//    @Bean
+//    public LocalSessionFactoryBean sessionFactory(){
+//        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+//        sessionFactory.setDataSource(dataSource());
+//        sessionFactory.setPackagesToScan
+//                ("com.ilyapanteleychuk.foxminded.universityschedule.entity");
+//        sessionFactory.setHibernateProperties(hibernateProperties());
+//        return sessionFactory;
+//    }
+//
+//    @Bean
+//    public PlatformTransactionManager transactionManager(){
+//        HibernateTransactionManager transactionManager =
+//                new HibernateTransactionManager();
+//        transactionManager.setSessionFactory(sessionFactory().getObject());
+//        return transactionManager;
+//    }
     
     
     private Properties hibernateProperties() {
@@ -115,7 +142,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter implements
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.PostgresPlusDialect");
         hibernateProperties.setProperty("hibernate.jdbc.batch_size", "25");
+        hibernateProperties.setProperty("hibernate.show_sql", "true");
         return hibernateProperties;
     }
-    
 }

@@ -1,57 +1,63 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.service.impl;
 
-import com.ilyapanteleychuk.foxminded.universityschedule.dao.impl.TeacherDao;
+import com.ilyapanteleychuk.foxminded.universityschedule.dao.TeacherRepository;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Teacher;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class TeacherService implements CommonService<Teacher> {
     
-    private final TeacherDao teacherDao;
+    private final TeacherRepository teacherRepository;
     
     @Autowired
-    public TeacherService(TeacherDao teacherDao) {
-        this.teacherDao = teacherDao;
+    public TeacherService(TeacherRepository teacherRepository) {
+        this.teacherRepository = teacherRepository;
     }
     
     @Override
     @Transactional
-    public void add(Teacher teacher) {
-        teacherDao.save(teacher);
+    public void save(Teacher teacher) {
+        teacherRepository.save(teacher);
     }
     
     @Override
     @Transactional
-    public void addAll(List<Teacher> teacherList) {
-        teacherDao.saveAll(teacherList);
+    public void saveAll(List<Teacher> teacherList) {
+        teacherRepository.saveAll(teacherList);
     }
     
     @Override
     @Transactional
-    public Teacher loadById(long id) {
-        return teacherDao.loadById(id);
+    public Teacher findById(long id) {
+        Optional<Teacher> optionalTeacher = teacherRepository.findById(id);
+        if(optionalTeacher.isPresent()){
+            return optionalTeacher.get();
+        }else{
+            return new Teacher("default", "default");
+        }
     }
     
     @Override
     @Transactional
-    public List<Teacher> loadAll() {
-        return teacherDao.loadAll();
+    public List<Teacher> findAll() {
+        return teacherRepository.findAll();
     }
     
     @Override
     @Transactional
     public void update(Teacher teacher) {
-        teacherDao.update(teacher);
+        teacherRepository.save(teacher);
     }
     
     @Override
     @Transactional
     public void deleteById(long id) {
-        teacherDao.deleteById(id);
+        teacherRepository.deleteById(id);
     }
 }

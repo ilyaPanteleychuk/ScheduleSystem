@@ -1,14 +1,17 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.service.impl;
 
-import com.ilyapanteleychuk.foxminded.universityschedule.dao.impl.TeacherLessonDao;
+import com.ilyapanteleychuk.foxminded.universityschedule.dao.TeacherLessonRepository;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.TeacherLesson;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -16,56 +19,65 @@ public class TeacherLessonServiceImpl
         implements CommonService<TeacherLesson>, LessonService<TeacherLesson> {
     
     private final ScheduleFormatterService<TeacherLesson> scheduleFormatterService;
-    private final TeacherLessonDao teacherLessonDao;
+    private final TeacherLessonRepository teacherLessonRepository;
     
     @Autowired
     public TeacherLessonServiceImpl(ScheduleFormatterService<TeacherLesson>
                                                 scheduleFormatterService,
-                                    TeacherLessonDao teacherLessonDao) {
+                                    TeacherLessonRepository teacherLessonRepository) {
         this.scheduleFormatterService = scheduleFormatterService;
-        this.teacherLessonDao = teacherLessonDao;
+        this.teacherLessonRepository = teacherLessonRepository;
     }
     
     @Override
     @Transactional
-    public Map<String,List<TeacherLesson>> loadLessonsPerWeek(long id) {
-        List<TeacherLesson> lessons = teacherLessonDao.loadLessonsPerWeek(id);
+    public Map<String,List<TeacherLesson>> loadLessonsPerWeek(long teacherId) {
+        LocalDate start = LocalDate.now(ZoneId.systemDefault());
+        LocalDate end = start.plusDays(7);
+        List<TeacherLesson> lessons = teacherLessonRepository
+                .findAllByDateBetweenAndTeacherId(start, end, teacherId);
         return scheduleFormatterService.formatLessons(lessons);
     }
     
     @Override
     @Transactional
-    public void add(TeacherLesson teacherLesson) {
-        teacherLessonDao.save(teacherLesson);
+    public void save(TeacherLesson teacherLesson) {
+        teacherLessonRepository.save(teacherLesson);
     }
     
     @Override
     @Transactional
-    public void addAll(List<TeacherLesson> teacherLessons) {
-        teacherLessonDao.saveAll(teacherLessons);
+    public void saveAll(List<TeacherLesson> teacherLessons) {
+        teacherLessonRepository.saveAll(teacherLessons);
     }
     
     @Override
     @Transactional
-    public TeacherLesson loadById(long id) {
-        return teacherLessonDao.loadById(id);
+    public TeacherLesson findById(long id) {
+        Optional<TeacherLesson> optionalLesson =
+                teacherLessonRepository.findById(id);
+        if(optionalLesson.isPresent()){
+            return optionalLesson.get();
+        }else{
+            return null;
+        }
     }
     
     @Override
     @Transactional
-    public List<TeacherLesson> loadAll() {
-        return teacherLessonDao.loadAll();
+    public List<TeacherLesson> findAll() {
+        return teacherLessonRepository.findAll();
     }
     
     @Override
     @Transactional
     public void update(TeacherLesson teacherLesson) {
-        teacherLessonDao.update(teacherLesson);
+        teacherLessonRepository.save(teacherLesson);
     }
     
     @Override
     @Transactional
     public void deleteById(long id) {
-        teacherLessonDao.deleteById(id);
+        teacherLessonRepository.deleteById(id);
     }
 }

@@ -39,13 +39,13 @@ public class GroupController {
     
     @RequestMapping("/")
     public String startView(Model model){
-        model.addAttribute("testLesson", groupLessonService.loadById(6));
+        model.addAttribute("testLesson", groupLessonService.findById(6));
         return "startView";
     }
     
     @RequestMapping("/facultyPage")
     public String facultyPage(Model model){
-        model.addAttribute("facultyList", facultyService.loadAll());
+        model.addAttribute("facultyList", facultyService.findAll());
         return "facultyPage";
     }
     
