@@ -36,11 +36,7 @@ public class FacultyService implements CommonService<Faculty> {
     @Transactional
     public Faculty findById(long id) {
         Optional<Faculty> optionalFaculty = facultyRepository.findById(id);
-        if(optionalFaculty.isPresent()){
-            return optionalFaculty.get();
-        }else{
-            return new Faculty("default");
-        }
+        return optionalFaculty.orElseGet(() -> new Faculty("default"));
     }
     
     @Override

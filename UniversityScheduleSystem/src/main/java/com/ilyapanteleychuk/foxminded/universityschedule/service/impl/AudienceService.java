@@ -36,11 +36,7 @@ public class AudienceService implements CommonService<Audience> {
     @Transactional
     public Audience findById(long id) {
         Optional<Audience> optionalAudience = audienceRepository.findById(id);
-        if(optionalAudience.isPresent()){
-            return optionalAudience.get();
-        }else{
-            return new Audience(0);
-        }
+        return optionalAudience.orElseGet(() -> new Audience(0));
     }
     
     @Override

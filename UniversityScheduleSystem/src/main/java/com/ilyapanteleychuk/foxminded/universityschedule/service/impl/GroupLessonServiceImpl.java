@@ -7,7 +7,6 @@ import com.ilyapanteleychuk.foxminded.universityschedule.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -32,11 +31,11 @@ public class GroupLessonServiceImpl implements
     
     @Override
     @Transactional
-    public Map<String,List<GroupLesson>> loadLessonsPerWeek(long id) {
-        LocalDate today = LocalDate.now(ZoneId.systemDefault());
-        LocalDate endOfTheWeek = today.plusDays(7);
+    public Map<String,List<GroupLesson>> loadLessonsPerWeek(long groupId) {
+        LocalDate start = LocalDate.now(ZoneId.systemDefault());
+        LocalDate end = start.plusDays(7);
         List<GroupLesson> lessons = groupLessonRepository
-                .findAllByDateBetweenAndId(today, endOfTheWeek, id);
+                .findAllByDateBetweenAndGroupId(start, end, groupId);
         return scheduleFormatterService.formatLessons(lessons);
     }
     
@@ -56,11 +55,7 @@ public class GroupLessonServiceImpl implements
     @Transactional
     public GroupLesson findById(long id) {
         Optional<GroupLesson> optionalLesson = groupLessonRepository.findById(id);
-        if (optionalLesson.isPresent()) {
-            return optionalLesson.get();
-        }else{
-            return null;
-        }
+        return optionalLesson.orElse(null);
     }
     
     @Override

@@ -2,8 +2,6 @@ package com.ilyapanteleychuk.foxminded.universityschedule.dao;
 
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 

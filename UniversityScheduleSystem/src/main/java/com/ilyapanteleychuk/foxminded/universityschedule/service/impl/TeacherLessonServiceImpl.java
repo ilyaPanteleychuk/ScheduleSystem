@@ -56,11 +56,7 @@ public class TeacherLessonServiceImpl
     public TeacherLesson findById(long id) {
         Optional<TeacherLesson> optionalLesson =
                 teacherLessonRepository.findById(id);
-        if(optionalLesson.isPresent()){
-            return optionalLesson.get();
-        }else{
-            return null;
-        }
+        return optionalLesson.orElse(null);
     }
     
     @Override

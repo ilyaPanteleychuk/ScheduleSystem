@@ -36,11 +36,7 @@ public class TeacherService implements CommonService<Teacher> {
     @Transactional
     public Teacher findById(long id) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(id);
-        if(optionalTeacher.isPresent()){
-            return optionalTeacher.get();
-        }else{
-            return new Teacher("default", "default");
-        }
+        return optionalTeacher.orElseGet(() -> new Teacher("default", "default"));
     }
     
     @Override

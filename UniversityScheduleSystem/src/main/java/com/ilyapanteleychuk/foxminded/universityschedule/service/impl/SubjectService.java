@@ -36,11 +36,7 @@ public class SubjectService implements CommonService<Subject> {
     @Transactional
     public Subject findById(long id) {
         Optional<Subject> optionalSubject = subjectRepository.findById(id);
-        if(optionalSubject.isPresent()){
-            return optionalSubject.get();
-        }else{
-            return new Subject("default");
-        }
+        return optionalSubject.orElseGet(() -> new Subject("default"));
     }
     
     @Override

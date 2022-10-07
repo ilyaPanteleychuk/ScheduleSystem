@@ -38,8 +38,7 @@ public class GroupController {
     }
     
     @RequestMapping("/")
-    public String startView(Model model){
-        model.addAttribute("testLesson", groupLessonService.findById(6));
+    public String startView(){
         return "startView";
     }
     

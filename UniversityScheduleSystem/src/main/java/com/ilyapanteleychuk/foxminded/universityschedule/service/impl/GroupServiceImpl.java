@@ -43,11 +43,7 @@ public class GroupServiceImpl implements CommonService<Group>, GroupService {
     @Transactional
     public Group findById(long id) {
         Optional<Group> optionalGroup = groupRepository.findById(id);
-        if(optionalGroup.isPresent()){
-            return optionalGroup.get();
-        }else{
-            return new Group(0, 0);
-        }
+        return optionalGroup.orElseGet(() -> new Group(0, 0));
     }
     
     @Override
