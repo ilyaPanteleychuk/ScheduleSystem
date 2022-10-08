@@ -23,17 +23,17 @@ public class GroupController {
     
     private final GroupServiceImpl groupServiceImpl;
     private final FacultyService facultyService;
-    private final LessonService<GroupLesson> groupLessonLessonService;
+    private final GroupLessonServiceImpl groupLessonService;
     private final LessonService<TeacherLesson> teacherLessonLessonService;
     
     @Autowired
     public GroupController(GroupServiceImpl groupServiceImpl,
                            FacultyService facultyService,
-                           GroupLessonServiceImpl groupLessonLessonService,
+                           GroupLessonServiceImpl groupLessonService,
                            TeacherLessonServiceImpl teacherLessonLessonService) {
         this.groupServiceImpl = groupServiceImpl;
         this.facultyService = facultyService;
-        this.groupLessonLessonService = groupLessonLessonService;
+        this.groupLessonService = groupLessonService;
         this.teacherLessonLessonService = teacherLessonLessonService;
     }
     
@@ -44,7 +44,7 @@ public class GroupController {
     
     @RequestMapping("/facultyPage")
     public String facultyPage(Model model){
-        model.addAttribute("facultyList", facultyService.loadAll());
+        model.addAttribute("facultyList", facultyService.findAll());
         return "facultyPage";
     }
     
@@ -61,7 +61,7 @@ public class GroupController {
         List<LocalDate> currentWeek = DateFormatter.getCurrentWeek();
         model.addAttribute("weekDates", currentWeek);
         Map<String, List<GroupLesson>> lessons =
-                groupLessonLessonService.loadLessonsPerWeek(groupId);
+                groupLessonService.loadLessonsPerWeek(groupId);
         model.addAttribute("lessons", lessons);
         return "groupSchedule";
     }

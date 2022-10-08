@@ -48,7 +48,8 @@
     </tr>
     <tr>
         <td th:if="${lessons.containsKey('Monday')}" class="table__field">
-            <div class="table__field__rectangle" th:each="value : ${lessons.get('Monday')}">
+            <div class="table__field__rectangle"
+                 th:each="value : ${lessons.get('Monday')}">
                 Subject
                 <br>
                 <th:block th:text="${value.subject.title}"/>
@@ -71,7 +72,8 @@
             </div>
         </td>
         <td th:if="${lessons.containsKey('Tuesday')}" class="table__field">
-            <div class="table__field__rectangle" th:each="value : ${lessons.get('Tuesday')}">
+            <div class="table__field__rectangle"
+                 th:each="value : ${lessons.get('Tuesday')}">
                 Subject
                 <br>
                 <th:block th:text="${value.subject.title}"/>
@@ -94,7 +96,8 @@
             </div>
         </td>
         <td th:if="${lessons.containsKey('Wednesday')}" class="table__field">
-            <div class="table__field__rectangle" th:each="value : ${lessons.get('Wednesday')}">
+            <div class="table__field__rectangle"
+                 th:each="value : ${lessons.get('Wednesday')}">
                 Subject
                 <br>
                 <th:block th:text="${value.subject.title}"/>
@@ -117,7 +120,8 @@
             </div>
         </td>
         <td th:if="${lessons.containsKey('Thursday')}" class="table__field">
-            <div class="table__field__rectangle" th:each="value : ${lessons.get('Thursday')}">
+            <div class="table__field__rectangle"
+                 th:each="value : ${lessons.get('Thursday')}">
                 Subject
                 <br>
                 <th:block th:text="${value.subject.title}"/>
@@ -140,7 +144,8 @@
             </div>
         </td>
         <td th:if="${lessons.containsKey('Friday')}" class="table__field">
-            <div class="table__field__rectangle" th:each="value : ${lessons.get('Friday')}">
+            <div class="table__field__rectangle"
+                 th:each="value : ${lessons.get('Friday')}">
                 Subject
                 <br>
                 <th:block th:text="${value.subject.title}"/>
@@ -164,7 +169,8 @@
             </div>
         </td>
         <td th:if="${lessons.containsKey('Saturday')}" class="table__field">
-            <div class="table__field__rectangle" th:each="value : ${lessons.get('Saturday')}">
+            <div class="table__field__rectangle"
+                 th:each="value : ${lessons.get('Saturday')}">
                 Subject
                 <br>
                 <th:block th:text="${value.subject.title}"/>
@@ -172,7 +178,6 @@
                 Audience
                 <br>
                 #<th:block th:text="${value.audience.audienceNumber}"/>
-                <br>
                 <br>
                 Group
                 <br>
@@ -204,7 +209,6 @@
                 Faculty
                 <br>
                 <th:block th:text="${value.group.faculty.title}"/>
-                <br>
                 <br>
                 Type
                 <br>

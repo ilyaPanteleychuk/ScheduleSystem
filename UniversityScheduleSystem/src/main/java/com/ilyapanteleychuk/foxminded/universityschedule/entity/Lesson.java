@@ -1,16 +1,40 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.entity;
 
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDate;
 import java.util.Objects;
 
 
-public abstract class Lesson implements Entity {
+@MappedSuperclass
+public abstract class Lesson {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     protected long id;
+    
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subject_id")
     protected Subject subject;
+    
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "audience_id")
     protected Audience audience;
+    
+    @Column(name = "date")
     protected LocalDate date;
+    
+    @Column(name = "type")
     protected String type;
+    
+    @Column(name = "lesson_order")
     protected int order;
     
     protected Lesson() {

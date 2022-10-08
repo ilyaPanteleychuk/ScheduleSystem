@@ -1,25 +1,19 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.service;
 
-import com.ilyapanteleychuk.foxminded.universityschedule.entity.Entity;
-
 import java.util.List;
 
 
-public interface CommonService <T extends Entity> {
+public interface CommonService <T> {
     
-    void add(T t);
+    void save(T t);
     
-    void addAll(List<T> t);
+    void saveAll(List<T> t);
     
-    T load(T t);
+    T findById(long id);
     
-    T loadById(long id);
+    List<T> findAll();
     
-    List<T> loadAll();
-    
-    void update(long id, T t);
-    
-    void delete(T t);
+    void update(T t);
     
     void deleteById(long id);
 }

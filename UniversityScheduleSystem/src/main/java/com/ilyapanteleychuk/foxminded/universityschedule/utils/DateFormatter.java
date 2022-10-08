@@ -22,5 +22,4 @@ public class DateFormatter {
         }
         return days;
     }
-    
 }

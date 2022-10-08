@@ -1,13 +1,17 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.service.impl;
 
-import com.ilyapanteleychuk.foxminded.universityschedule.dao.impl.GroupLessonDaoImpl;
+import com.ilyapanteleychuk.foxminded.universityschedule.dao.GroupLessonRepository;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.GroupLesson;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -15,59 +19,60 @@ public class GroupLessonServiceImpl implements
         CommonService<GroupLesson>, LessonService<GroupLesson> {
     
     private final ScheduleFormatterService<GroupLesson> scheduleFormatterService;
-    private final GroupLessonDaoImpl groupLessonDaoImpl;
+    private final GroupLessonRepository groupLessonRepository;
     
     @Autowired
-    public GroupLessonServiceImpl(ScheduleFormatterService<GroupLesson> scheduleFormatterService,
-                                  GroupLessonDaoImpl groupLessonDaoImpl) {
+    public GroupLessonServiceImpl(ScheduleFormatterService<GroupLesson>
+                                          scheduleFormatterService,
+                                  GroupLessonRepository groupLessonRepository) {
         this.scheduleFormatterService = scheduleFormatterService;
-        this.groupLessonDaoImpl = groupLessonDaoImpl;
+        this.groupLessonRepository = groupLessonRepository;
     }
     
     @Override
-    public Map<String,List<GroupLesson>> loadLessonsPerWeek(long id) {
-        List<GroupLesson> lessons = groupLessonDaoImpl.loadLessonsPerWeek(id);
+    @Transactional
+    public Map<String,List<GroupLesson>> loadLessonsPerWeek(long groupId) {
+        LocalDate start = LocalDate.now(ZoneId.systemDefault());
+        LocalDate end = start.plusDays(7);
+        List<GroupLesson> lessons = groupLessonRepository
+                .findAllByDateBetweenAndGroupId(start, end, groupId);
         return scheduleFormatterService.formatLessons(lessons);
     }
     
     @Override
-    public void add(GroupLesson groupLesson) {
-        groupLessonDaoImpl.add(groupLesson);
+    @Transactional
+    public void save(GroupLesson groupLesson) {
+        groupLessonRepository.save(groupLesson);
     }
     
     @Override
-    public void addAll(List<GroupLesson> groupLessons) {
-        groupLessonDaoImpl.addAll(groupLessons);
+    @Transactional
+    public void saveAll(List<GroupLesson> groupLessons) {
+        groupLessonRepository.saveAll(groupLessons);
     }
     
     @Override
-    public GroupLesson load(GroupLesson groupLesson) {
-        return groupLessonDaoImpl.load(groupLesson);
+    @Transactional
+    public GroupLesson findById(long id) {
+        Optional<GroupLesson> optionalLesson = groupLessonRepository.findById(id);
+        return optionalLesson.orElse(null);
     }
     
     @Override
-    public GroupLesson loadById(long id) {
-        return groupLessonDaoImpl.loadById(id);
+    @Transactional
+    public List<GroupLesson> findAll() {
+        return groupLessonRepository.findAll();
     }
     
     @Override
-    public List<GroupLesson> loadAll() {
-        return groupLessonDaoImpl.loadAll();
+    @Transactional
+    public void update(GroupLesson groupLesson) {
+        groupLessonRepository.save(groupLesson);
     }
     
     @Override
-    public void update(long id, GroupLesson groupLesson) {
-        groupLessonDaoImpl.update(id, groupLesson);
-    }
-    
-    @Override
-    public void delete(GroupLesson groupLesson) {
-        groupLessonDaoImpl.delete(groupLesson);
-    }
-    
-    @Override
+    @Transactional
     public void deleteById(long id) {
-        groupLessonDaoImpl.deleteById(id);
+        groupLessonRepository.deleteById(id);
     }
-    
 }

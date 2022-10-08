@@ -57,6 +57,14 @@ option{
     width: 20%;
 }
 
+.header__column__teacher{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 60%;
+    width: 20%;
+}
+
 .header__column::before{
     position: absolute;
     content: "";

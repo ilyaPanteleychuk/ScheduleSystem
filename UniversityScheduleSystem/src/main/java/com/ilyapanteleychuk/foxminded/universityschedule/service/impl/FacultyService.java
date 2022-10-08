@@ -1,60 +1,59 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.service.impl;
 
-import com.ilyapanteleychuk.foxminded.universityschedule.dao.impl.FacultyDaoImpl;
+import com.ilyapanteleychuk.foxminded.universityschedule.dao.FacultyRepository;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Faculty;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class FacultyService implements CommonService<Faculty> {
     
-    private final FacultyDaoImpl facultyDaoImpl;
+    private final FacultyRepository facultyRepository;
     
     @Autowired
-    public FacultyService(FacultyDaoImpl facultyDaoImpl) {
-        this.facultyDaoImpl = facultyDaoImpl;
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
     }
     
     @Override
-    public void add(Faculty faculty) {
-        facultyDaoImpl.add(faculty);
+    @Transactional
+    public void save(Faculty faculty) {
+        facultyRepository.save(faculty);
     }
     
     @Override
-    public void addAll(List<Faculty> faculties) {
-        facultyDaoImpl.addAll(faculties);
+    @Transactional
+    public void saveAll(List<Faculty> faculties) {
+        facultyRepository.saveAll(faculties);
     }
     
     @Override
-    public Faculty load(Faculty faculty) {
-        return facultyDaoImpl.load(faculty);
+    @Transactional
+    public Faculty findById(long id) {
+        Optional<Faculty> optionalFaculty = facultyRepository.findById(id);
+        return optionalFaculty.orElseGet(() -> new Faculty("default"));
     }
     
     @Override
-    public Faculty loadById(long id) {
-        return facultyDaoImpl.loadById(id);
+    @Transactional
+    public List<Faculty> findAll() {
+        return facultyRepository.findAll();
     }
     
     @Override
-    public List<Faculty> loadAll() {
-        return facultyDaoImpl.loadAll();
+    @Transactional
+    public void update(Faculty faculty) {
+        facultyRepository.save(faculty);
     }
     
     @Override
-    public void update(long id, Faculty faculty) {
-        facultyDaoImpl.update(id, faculty);
-    }
-    
-    @Override
-    public void delete(Faculty faculty) {
-        facultyDaoImpl.delete(faculty);
-    }
-    
-    @Override
+    @Transactional
     public void deleteById(long id) {
-        facultyDaoImpl.deleteById(id);
+        facultyRepository.deleteById(id);
     }
 }

@@ -1,7 +1,6 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.service;
 
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Lesson;
-
 import java.util.List;
 import java.util.Map;
 

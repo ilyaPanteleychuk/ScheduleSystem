@@ -1,60 +1,59 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.service.impl;
 
-import com.ilyapanteleychuk.foxminded.universityschedule.dao.impl.TeacherDao;
+import com.ilyapanteleychuk.foxminded.universityschedule.dao.TeacherRepository;
 import com.ilyapanteleychuk.foxminded.universityschedule.entity.Teacher;
 import com.ilyapanteleychuk.foxminded.universityschedule.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class TeacherService implements CommonService<Teacher> {
     
-    private final TeacherDao teacherDao;
+    private final TeacherRepository teacherRepository;
     
     @Autowired
-    public TeacherService(TeacherDao teacherDao) {
-        this.teacherDao = teacherDao;
+    public TeacherService(TeacherRepository teacherRepository) {
+        this.teacherRepository = teacherRepository;
     }
     
     @Override
-    public void add(Teacher teacher) {
-        teacherDao.add(teacher);
+    @Transactional
+    public void save(Teacher teacher) {
+        teacherRepository.save(teacher);
     }
     
     @Override
-    public void addAll(List<Teacher> teacherList) {
-        teacherDao.addAll(teacherList);
+    @Transactional
+    public void saveAll(List<Teacher> teacherList) {
+        teacherRepository.saveAll(teacherList);
     }
     
     @Override
-    public Teacher load(Teacher teacher) {
-        return teacherDao.load(teacher);
+    @Transactional
+    public Teacher findById(long id) {
+        Optional<Teacher> optionalTeacher = teacherRepository.findById(id);
+        return optionalTeacher.orElseGet(() -> new Teacher("default", "default"));
     }
     
     @Override
-    public Teacher loadById(long id) {
-        return teacherDao.loadById(id);
+    @Transactional
+    public List<Teacher> findAll() {
+        return teacherRepository.findAll();
     }
     
     @Override
-    public List<Teacher> loadAll() {
-        return teacherDao.loadAll();
+    @Transactional
+    public void update(Teacher teacher) {
+        teacherRepository.save(teacher);
     }
     
     @Override
-    public void update(long id, Teacher teacher) {
-        teacherDao.update(id, teacher);
-    }
-    
-    @Override
-    public void delete(Teacher teacher) {
-        teacherDao.delete(teacher);
-    }
-    
-    @Override
+    @Transactional
     public void deleteById(long id) {
-        teacherDao.deleteById(id);
+        teacherRepository.deleteById(id);
     }
 }

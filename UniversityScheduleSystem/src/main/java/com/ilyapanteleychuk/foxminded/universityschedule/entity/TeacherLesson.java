@@ -1,11 +1,19 @@
 package com.ilyapanteleychuk.foxminded.universityschedule.entity;
 
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Objects;
 
 
-public class TeacherLesson extends Lesson implements Entity{
+@Entity
+@Table(name = "university.lesson")
+public class TeacherLesson extends Lesson {
     
+    @ManyToOne
+    @JoinColumn(name = "group_id")
     private Group group;
     
     public TeacherLesson() {
