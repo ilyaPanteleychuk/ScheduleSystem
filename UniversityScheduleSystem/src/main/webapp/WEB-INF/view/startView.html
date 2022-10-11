@@ -14,15 +14,18 @@
 </head>
 <body>
 
-    <p>Greeting, choose who you are</p>
-    <div class="header">
-        <form action="facultyPage" method="get">
-            <button value="value">Group</button>
+    <header class="header">
+        <h1 class="header__greeting">Greeting, choose who you are</h1>
+    </header>
+
+    <main class="greeting__form__container">
+        <form class="greeting__form" action="facultyPage" method="get">
+             <button class="greeting__form__button" value="value">Student</button>
         </form>
 
-        <form action="teacherForm" method="get">
-            <button value="value">Teacher</button>
+        <form class="greeting__form" action="teacherForm" method="get">
+            <button class="greeting__form__button" value="value">Teacher</button>
         </form>
-    </div>
+    </main>
 </body>
 </html>
