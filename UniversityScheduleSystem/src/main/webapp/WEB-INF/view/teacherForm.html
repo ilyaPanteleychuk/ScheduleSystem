@@ -1,4 +1,3 @@
-<!--Temporary page-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,16 +12,17 @@
     <title>TeacherForm</title>
 </head>
 <body>
-<form action="teacherScheduleResult" method="get" class="header">
+    <form action="teacherScheduleResult" method="get" class="header">
 
-    <div class="header__column__teacher">
-        <h3 class="header__column__title">TeacherID</h3>
-        <input type="number" name="teacherID" placeholder="ID">
-    </div>
+        <div class="header__column__teacher">
+            <h3 class="header__column__title">TeacherID</h3>
+            <input class="header__column__input"
+                type="number" name="teacherID" placeholder="ID">
+        </div>
 
-    <div>
-        <button type="submit" value="Show">Show</button>
-    </div>
-</form>
+        <div class="greeting__form submit">
+            <button class="greeting__form__button" type="submit" value="Show">Show</button>
+        </div>
+    </form>
 </body>
 </html>
