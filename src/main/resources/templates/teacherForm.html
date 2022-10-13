@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0,
+           maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" th:href="@{css/style.css}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
+          rel="stylesheet">
+    <title>TeacherForm</title>
+</head>
+<body>
+    <form action="teacherScheduleResult" method="get" class="header">
+
+        <div class="header__column__teacher">
+            <h3 class="header__column__title">TeacherID</h3>
+            <input class="header__column__input"
+                type="number" name="teacherID" placeholder="ID">
+        </div>
+
+        <div class="greeting__form submit">
+            <button class="greeting__form__button" type="submit" value="Show">Show</button>
+        </div>
+    </form>
+</body>
+</html>
